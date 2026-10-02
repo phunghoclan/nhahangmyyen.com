@@ -1,3 +1,2 @@
-// Paste the deployed Google Apps Script /exec URL here after following
-// google-apps-script/SETUP.md. Keep the empty value until then.
-window.MYYEN_REQUEST_ENDPOINT = '';
+// Public Google Apps Script endpoint for reservation, event, and catering requests.
+window.MYYEN_REQUEST_ENDPOINT = 'https://script.google.com/macros/s/AKfycbxCz60vev-2hIsxokTHgI-3ahg5n9E9Z_PBqjvW5f28joTBQDj1SmnyA97JFx654epyvQ/exec';
