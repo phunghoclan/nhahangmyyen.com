@@ -1,0 +1,137 @@
+.catering {
+  background: #ede4d1;
+  text-align: center;
+}
+
+.catering .lead {
+  max-width: 720px;
+  margin: 1rem auto 2.5rem;
+}
+
+.catering-grid {
+  max-width: 1100px;
+  margin: 0 auto 2.25rem;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+  text-align: left;
+}
+
+.catering-grid article {
+  background: #fffdf8;
+  padding: 1.75rem;
+  border-top: 4px solid #c49d3a;
+}
+
+#visit {
+  text-align: center;
+  background: #fffdf8;
+}
+
+#visit .lead {
+  max-width: 620px;
+  margin: 1rem auto;
+}
+
+footer a {
+  color: #f1d674;
+  text-underline-offset: 4px;
+}
+
+.proof-strip {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  background: #18251e;
+  color: #f7f2e8;
+  padding: 1.4rem clamp(1.2rem, 7vw, 8rem);
+}
+
+.proof-strip p {
+  display: grid;
+  gap: .2rem;
+  margin: 0;
+  padding: .25rem 2rem;
+  border-right: 1px solid rgba(255,255,255,.18);
+}
+
+.proof-strip p:last-child { border-right: 0; }
+.proof-strip strong { color: #f1d674; font-family: "Playfair Display", serif; font-size: 1.35rem; }
+.proof-strip span { font-size: .82rem; opacity: .82; }
+
+.journeys { background: #fffdf8; }
+.journey-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1px;
+  max-width: 1200px;
+  margin: 0 auto;
+  background: #cabfaa;
+  border: 1px solid #cabfaa;
+}
+
+.journey-grid a {
+  position: relative;
+  display: block;
+  min-height: 320px;
+  padding: 2.2rem;
+  color: #1f211d;
+  background: #f7f2e8;
+  text-decoration: none;
+  transition: background-color .2s ease, color .2s ease;
+}
+
+.journey-grid a:hover,
+.journey-grid a:focus-visible { background: #263a31; color: #fffdf8; }
+.journey-grid span { color: #9a7a2d; font: 600 1rem "Playfair Display", serif; }
+.journey-grid h3 { margin-top: 4rem; }
+.journey-grid p { min-height: 76px; color: #5c5a52; }
+.journey-grid a:hover p,
+.journey-grid a:focus-visible p { color: #dfd9cb; }
+.journey-grid strong { display: inline-block; margin-top: 1rem; color: #71571a; text-decoration: underline; text-underline-offset: 6px; }
+.journey-grid a:hover strong,
+.journey-grid a:focus-visible strong { color: #f1d674; }
+
+.moment-note { flex-direction: column; justify-content: center; align-items: flex-start; }
+.moment-note p { margin-top: 0; }
+.moment-note a { color: #1f211d; font: 700 .85rem "Be Vietnam Pro", sans-serif; text-underline-offset: 5px; }
+.optional { opacity: .65; font-weight: 500; }
+.form-row-three { grid-template-columns: 1fr 1fr .8fr; }
+.privacy-note { font-size: .78rem; color: #6a695f; }
+.honeypot { position: absolute; left: -10000px; width: 1px; height: 1px; overflow: hidden; }
+.mobile-actions { display: none; }
+
+@media (max-width: 800px) {
+  .catering-grid { grid-template-columns: 1fr; }
+  body { padding-bottom: 64px; }
+  .proof-strip { grid-template-columns: 1fr; padding: .8rem 1.2rem; }
+  .proof-strip p { border-right: 0; border-bottom: 1px solid rgba(255,255,255,.14); padding: .7rem 0; }
+  .proof-strip p:last-child { border-bottom: 0; }
+  .journey-grid { grid-template-columns: 1fr; }
+  .journey-grid a { min-height: auto; padding: 1.7rem; }
+  .journey-grid h3 { margin-top: 1.8rem; }
+  .journey-grid p { min-height: auto; }
+  .form-row-three { grid-template-columns: 1fr; }
+  .mobile-actions {
+    position: fixed;
+    z-index: 30;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: grid;
+    grid-template-columns: .8fr .8fr 1.4fr;
+    min-height: 64px;
+    background: #18251e;
+    box-shadow: 0 -8px 28px rgba(0,0,0,.18);
+  }
+  .mobile-actions a {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fffdf8;
+    text-decoration: none;
+    font-size: .8rem;
+    font-weight: 700;
+    border-right: 1px solid rgba(255,255,255,.16);
+  }
+  .mobile-actions a:last-child { color: #1f211d; background: #c49d3a; border-right: 0; }
+}
