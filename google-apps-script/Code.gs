@@ -6,8 +6,11 @@ const SETTINGS = {
   businessName: 'Nhà Hàng Mỹ Yến',
   notificationEmail: 'nhahangmyyen88@gmail.com',
   calendarName: 'Mỹ Yến — Đặt bàn & Sự kiện',
+  requestSheetName: 'Yêu cầu',
+  confirmedStatus: 'Đã xác nhận',
   responsePromise: '30–60 phút trong giờ hoạt động',
-  timeZone: 'Asia/Ho_Chi_Minh'
+  timeZone: 'Asia/Ho_Chi_Minh',
+  eventDurationMinutes: 120
 };
 
 function doPost(e) {
@@ -58,7 +61,94 @@ function sendGuestAcknowledgement_(r) {
   MailApp.sendEmail(r.email, subject, body);
 }
 
-// Chỉ chạy sau khi nhân viên đã xác nhận với khách.
+/**
+ * Chạy một lần trong Apps Script sau khi triển khai.
+ * Hàm này tạo lịch riêng và cài trình kích hoạt để theo dõi cột Trạng thái.
+ */
+function setupWorkflow() {
+  const sheetId = PropertiesService.getScriptProperties().getProperty('REQUEST_SHEET_ID');
+  if (!sheetId) throw new Error('Chưa có thuộc tính REQUEST_SHEET_ID.');
+  const calendar = getOrCreateCalendar_();
+  const handler = 'handleRequestStatusChange_';
+  const hasTrigger = ScriptApp.getProjectTriggers().some(trigger =>
+    trigger.getHandlerFunction() === handler && trigger.getEventType() === ScriptApp.EventType.ON_EDIT
+  );
+  if (!hasTrigger) {
+    ScriptApp.newTrigger(handler).forSpreadsheet(sheetId).onEdit().create();
+  }
+  return `Đã sẵn sàng. Calendar: ${calendar.getName()}. Trigger: ${hasTrigger ? 'đã có' : 'vừa tạo'}.`;
+}
+
+/**
+ * Tự động chạy khi nhân viên đổi Trạng thái thành “Đã xác nhận”.
+ */
+function handleRequestStatusChange_(e) {
+  if (!e || !e.range) return;
+  const range = e.range;
+  const sheet = range.getSheet();
+  if (sheet.getName() !== SETTINGS.requestSheetName || range.getRow() < 2 || range.getColumn() !== 11) return;
+  if (String(range.getValue()).trim() !== SETTINGS.confirmedStatus) return;
+
+  const lock = LockService.getScriptLock();
+  if (!lock.tryLock(10000)) return;
+  try {
+    const row = range.getRow();
+    const values = sheet.getRange(row, 1, 1, 12).getValues()[0];
+    if (String(values[10]).trim() !== SETTINGS.confirmedStatus || values[11]) return;
+    const request = {
+      id: safe_(values[0]), createdAt: values[1], type: safe_(values[2]), name: safe_(values[3]),
+      phone: safe_(values[4]), email: safe_(values[5]), date: values[6], time: values[7],
+      guests: safe_(values[8]), note: safe_(values[9])
+    };
+    const start = requestDateTime_(request.date, request.time);
+    const end = new Date(start.getTime() + SETTINGS.eventDurationMinutes * 60 * 1000);
+    const title = `${request.type} — ${request.name} — ${request.guests} khách/suất`;
+    const description = `Mã yêu cầu: ${request.id}\nKhách / công ty: ${request.name}\nĐiện thoại: ${request.phone}\nEmail: ${request.email || 'Không cung cấp'}\nSố khách / suất: ${request.guests}\nGhi chú: ${request.note || 'Không có'}\n\nĐã được nhân viên chuyển sang trạng thái Đã xác nhận.`;
+    const event = createConfirmedEvent_(title, start, end, description);
+    sheet.getRange(row, 12).setValue(event.getId());
+    if (request.email) sendGuestConfirmation_(request);
+  } finally {
+    lock.releaseLock();
+  }
+}
+
+function sendGuestConfirmation_(r) {
+  const dateText = Utilities.formatDate(requestDateTime_(r.date, r.time), SETTINGS.timeZone, 'dd/MM/yyyy');
+  const timeText = Utilities.formatDate(requestDateTime_(r.date, r.time), SETTINGS.timeZone, 'HH:mm');
+  const subject = `${SETTINGS.businessName} xác nhận yêu cầu ${r.id}`;
+  const body = `Chào ${r.name},\n\nMỹ Yến xác nhận yêu cầu ${r.id} của bạn.\n\nLoại yêu cầu: ${r.type}\nNgày: ${dateText}\nGiờ: ${timeText}\nSố khách / suất: ${r.guests}\n\nNếu cần thay đổi, vui lòng gọi hoặc nhắn Zalo 0948 900 488.\n\nTrân trọng,\n${SETTINGS.businessName}`;
+  MailApp.sendEmail(r.email, subject, body);
+}
+
+function requestDateTime_(dateValue, timeValue) {
+  const date = dateValue instanceof Date
+    ? new Date(dateValue.getFullYear(), dateValue.getMonth(), dateValue.getDate())
+    : parseDate_(String(dateValue || ''));
+  let hours;
+  let minutes;
+  if (timeValue instanceof Date) {
+    hours = timeValue.getHours();
+    minutes = timeValue.getMinutes();
+  } else {
+    const match = String(timeValue || '').match(/^(\d{1,2}):(\d{2})/);
+    if (!match) throw new Error('Giờ dự kiến không hợp lệ.');
+    hours = Number(match[1]);
+    minutes = Number(match[2]);
+  }
+  date.setHours(hours, minutes, 0, 0);
+  if (Number.isNaN(date.getTime())) throw new Error('Ngày hoặc giờ dự kiến không hợp lệ.');
+  return date;
+}
+
+function parseDate_(value) {
+  let match = value.match(/^(\d{4})-(\d{2})-(\d{2})$/);
+  if (match) return new Date(Number(match[1]), Number(match[2]) - 1, Number(match[3]));
+  match = value.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/);
+  if (match) return new Date(Number(match[3]), Number(match[2]) - 1, Number(match[1]));
+  throw new Error('Ngày dự kiến không hợp lệ.');
+}
+
+// Chỉ được gọi sau khi nhân viên đã xác nhận với khách.
 function createConfirmedEvent_(title, start, end, description, guestEmail) {
   const calendar = getOrCreateCalendar_();
   const options = { description: description };
