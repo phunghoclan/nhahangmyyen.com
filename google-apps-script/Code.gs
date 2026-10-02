@@ -104,7 +104,7 @@ function handleRequestStatusChange_(e) {
     const end = new Date(start.getTime() + SETTINGS.eventDurationMinutes * 60 * 1000);
     const title = `${request.type} — ${request.name} — ${request.guests} khách/suất`;
     const description = `Mã yêu cầu: ${request.id}\nKhách / công ty: ${request.name}\nĐiện thoại: ${request.phone}\nEmail: ${request.email || 'Không cung cấp'}\nSố khách / suất: ${request.guests}\nGhi chú: ${request.note || 'Không có'}\n\nĐã được nhân viên chuyển sang trạng thái Đã xác nhận.`;
-    const event = createConfirmedEvent_(title, start, end, description);
+    const event = findConfirmedEvent_(request.id, start, end) || createConfirmedEvent_(title, start, end, description);
     sheet.getRange(row, 12).setValue(event.getId());
     if (request.email) sendGuestConfirmation_(request);
   } finally {
@@ -153,7 +153,17 @@ function createConfirmedEvent_(title, start, end, description, guestEmail) {
   const calendar = getOrCreateCalendar_();
   const options = { description: description };
   if (guestEmail) options.guests = guestEmail;
-  return calendar.createEvent(title, new Date(start), new Date(end), options).getId();
+  return calendar.createEvent(title, new Date(start), new Date(end), options);
+}
+
+function findConfirmedEvent_(requestId, start, end) {
+  const margin = 60 * 1000;
+  const events = getOrCreateCalendar_().getEvents(
+    new Date(start.getTime() - margin),
+    new Date(end.getTime() + margin),
+    { search: requestId }
+  );
+  return events.length ? events[0] : null;
 }
 
 function getOrCreateCalendar_() {
