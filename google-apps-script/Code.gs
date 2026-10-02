@@ -1,15 +1,11 @@
 /**
- * Mỹ Yến request intake — install in an Apps Script project owned by
- * nhahangmyyen88@gmail.com. See SETUP.md before deployment.
- *
- * This intake records a request, emails the restaurant and guest, and leaves
- * calendar creation until a staff member confirms availability. That prevents
- * a website request from promising a table or event that has not been checked.
+ * Tiếp nhận yêu cầu từ website Nhà Hàng Mỹ Yến.
+ * Dự án thuộc tài khoản nhahangmyyen88@gmail.com.
  */
 const SETTINGS = {
   businessName: 'Nhà Hàng Mỹ Yến',
   notificationEmail: 'nhahangmyyen88@gmail.com',
-  calendarName: 'Mỹ Yến Reservations & Events',
+  calendarName: 'Mỹ Yến — Đặt bàn & Sự kiện',
   responsePromise: '30–60 phút trong giờ hoạt động',
   timeZone: 'Asia/Ho_Chi_Minh'
 };
@@ -21,7 +17,7 @@ function doPost(e) {
   if (data.website) return json_({ ok: true });
   const required = ['type', 'name', 'phone', 'date', 'time', 'guests'];
   const missing = required.filter(key => !String(data[key] || '').trim());
-  if (missing.length) return json_({ ok: false, error: 'Missing required fields.' });
+  if (missing.length) return json_({ ok: false, error: 'Thiếu thông tin bắt buộc.' });
 
   const request = {
     id: Utilities.getUuid().slice(0, 8).toUpperCase(),
@@ -41,12 +37,12 @@ function appendRequest_(r) {
   let id = props.getProperty('REQUEST_SHEET_ID');
   let sheet;
   if (!id) {
-    const ss = SpreadsheetApp.create('Mỹ Yến — Website Requests');
+    const ss = SpreadsheetApp.create('Mỹ Yến — Yêu cầu từ website');
     sheet = ss.getActiveSheet();
-    sheet.setName('Requests');
+    sheet.setName('Yêu cầu');
     sheet.appendRow(['Mã yêu cầu','Nhận lúc','Loại yêu cầu','Tên khách / công ty','Điện thoại','Email','Ngày dự kiến','Giờ dự kiến','Số khách / suất','Ghi chú','Trạng thái','Mã sự kiện Calendar']);
     props.setProperty('REQUEST_SHEET_ID', ss.getId());
-  } else sheet = SpreadsheetApp.openById(id).getSheetByName('Requests');
+  } else sheet = SpreadsheetApp.openById(id).getSheetByName('Yêu cầu');
   sheet.appendRow([r.id,r.createdAt,r.type,r.name,r.phone,r.email,r.date,r.time,r.guests,r.note,r.status,'']);
 }
 
@@ -62,7 +58,7 @@ function sendGuestAcknowledgement_(r) {
   MailApp.sendEmail(r.email, subject, body);
 }
 
-// Run manually only after staff confirms. Add guests' email only with permission.
+// Chỉ chạy sau khi nhân viên đã xác nhận với khách.
 function createConfirmedEvent_(title, start, end, description, guestEmail) {
   const calendar = getOrCreateCalendar_();
   const options = { description: description };

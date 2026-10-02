@@ -1,31 +1,31 @@
-# Reservation and inquiry workflow
+# Quy trình đặt bàn và tiếp nhận yêu cầu
 
-## What this does
+## Hệ thống thực hiện
 
-1. A website inquiry is stored in a Google Sheet.
-2. `nhahangmyyen88@gmail.com` receives a staff alert.
-3. A guest receives an acknowledgement only if they supplied an email.
-4. Staff checks availability, contacts the guest, then creates a calendar event only after confirmation.
+1. Lưu yêu cầu từ website vào Google Trang tính.
+2. Gửi email thông báo cho `nhahangmyyen88@gmail.com`.
+3. Gửi email báo đã nhận yêu cầu nếu khách cung cấp email.
+4. Nhân viên kiểm tra khả năng phục vụ, liên hệ khách và chỉ tạo lịch sau khi hai bên xác nhận.
 
-This preserves the distinction between **request received** and **booking confirmed**.
+Như vậy, **đã nhận yêu cầu** luôn được phân biệt rõ với **đã xác nhận đặt chỗ**.
 
-## One-time setup
+## Thiết lập một lần
 
-1. Sign in as `nhahangmyyen88@gmail.com` and open Google Apps Script.
-2. Create a project named `Mỹ Yến Website Requests` and replace its default code with `Code.gs`.
-3. In **Project Settings → Script properties**, add `REQUEST_SHEET_ID` with value `1SGHBJwgJXMuDToSKKlLA5jwmRu2qcpxZ8JUCJuRKaIs`. This connects the form to the existing `Mỹ Yến — Website Requests` tracker instead of creating a duplicate.
-4. Deploy as a Web App. Run as: the restaurant Gmail account. Access: anyone.
-5. Approve Sheets, Gmail, and Calendar permissions when Google requests them.
-6. Copy the deployed `/exec` URL into `reservation-config.js`.
-7. The first confirmed booking creates the dedicated `Mỹ Yến Reservations & Events` calendar. Share that calendar with staff as **See all event details** or **Make changes to events**, according to their role.
+1. Đăng nhập `nhahangmyyen88@gmail.com` và mở Google Apps Script.
+2. Tạo dự án tên `Mỹ Yến — Yêu cầu từ website` rồi thay mã mặc định bằng nội dung trong `Code.gs`.
+3. Trong **Cài đặt dự án → Thuộc tính tập lệnh**, thêm `REQUEST_SHEET_ID` với giá trị `1SGHBJwgJXMuDToSKKlLA5jwmRu2qcpxZ8JUCJuRKaIs`. Bước này kết nối biểu mẫu với bảng theo dõi hiện có và tránh tạo bảng trùng.
+4. Triển khai dưới dạng **Ứng dụng web**. Chọn thực thi bằng tài khoản nhà hàng và cho phép mọi người truy cập.
+5. Cho phép quyền Google Trang tính, Gmail và Google Lịch khi Google yêu cầu.
+6. Sao chép đường dẫn triển khai kết thúc bằng `/exec` vào `reservation-config.js`.
+7. Lần đầu tạo lịch đã xác nhận, hệ thống sẽ tạo lịch riêng tên `Mỹ Yến — Đặt bàn & Sự kiện`. Chia sẻ lịch này cho nhân viên với quyền **Xem tất cả chi tiết sự kiện** hoặc **Thay đổi sự kiện**, tùy vai trò.
 
-## Staff operating rule
+## Quy tắc xử lý cho nhân viên
 
-- New request: acknowledge within **30–60 minutes during 6 AM–9 PM operating hours**.
-- Do not promise availability in the first acknowledgement.
-- Confirm date, time, guest count, seating/space, menu, deposit, and planner contact before creating the calendar event.
-- For urgent same-day matters, use Zalo `0948900488` or phone `0948 900 488`.
+- Phản hồi yêu cầu mới trong vòng **30–60 phút, từ 06:00 đến 21:00**.
+- Không hứa còn chỗ trong email báo đã nhận yêu cầu.
+- Trước khi tạo lịch, xác nhận ngày, giờ, số khách hoặc số suất, khu vực phục vụ, thực đơn, tiền cọc và người phụ trách.
+- Trường hợp gấp trong ngày, dùng Zalo `0948900488` hoặc gọi `0948 900 488`.
 
 ## Zalo
 
-The website can direct guests to Zalo immediately. Automated Zalo notifications should only be added after the restaurant has an approved Zalo Official Account/API configuration; no credentials are stored in this project.
+Website có thể đưa khách đến Zalo ngay. Chỉ thêm thông báo Zalo tự động sau khi nhà hàng có Zalo Official Account và quyền dùng API phù hợp. Dự án này không lưu thông tin đăng nhập Zalo.
