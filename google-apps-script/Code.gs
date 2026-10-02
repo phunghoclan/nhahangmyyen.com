@@ -28,7 +28,7 @@ function doPost(e) {
     createdAt: new Date(),
     type: safe_(data.type), name: safe_(data.name), phone: safe_(data.phone),
     email: safe_(data.email), date: safe_(data.date), time: safe_(data.time), guests: safe_(data.guests),
-    note: safe_(data.note), status: 'New — needs availability check'
+    note: safe_(data.note), status: 'Mới — cần kiểm tra chỗ'
   };
   appendRequest_(request);
   sendStaffAlert_(request);
@@ -44,15 +44,15 @@ function appendRequest_(r) {
     const ss = SpreadsheetApp.create('Mỹ Yến — Website Requests');
     sheet = ss.getActiveSheet();
     sheet.setName('Requests');
-    sheet.appendRow(['ID','Received','Type','Name','Phone','Email','Requested date','Requested time','Guests','Notes','Status','Confirmed event ID']);
+    sheet.appendRow(['Mã yêu cầu','Nhận lúc','Loại yêu cầu','Tên khách / công ty','Điện thoại','Email','Ngày dự kiến','Giờ dự kiến','Số khách / suất','Ghi chú','Trạng thái','Mã sự kiện Calendar']);
     props.setProperty('REQUEST_SHEET_ID', ss.getId());
   } else sheet = SpreadsheetApp.openById(id).getSheetByName('Requests');
   sheet.appendRow([r.id,r.createdAt,r.type,r.name,r.phone,r.email,r.date,r.time,r.guests,r.note,r.status,'']);
 }
 
 function sendStaffAlert_(r) {
-  const subject = `[Mỹ Yến] New request ${r.id}: ${r.type}`;
-  const body = `New website request\n\nID: ${r.id}\nType: ${r.type}\nGuest: ${r.name}\nPhone: ${r.phone}\nEmail: ${r.email || 'Not provided'}\nRequested date: ${r.date}\nRequested time: ${r.time}\nGuests: ${r.guests}\nNotes: ${r.note || 'None'}\n\nAction: check availability, contact guest, then create a confirmed calendar event.`;
+  const subject = `[Mỹ Yến] Yêu cầu mới ${r.id}: ${r.type}`;
+  const body = `Yêu cầu mới từ website\n\nMã: ${r.id}\nLoại: ${r.type}\nKhách / công ty: ${r.name}\nĐiện thoại: ${r.phone}\nEmail: ${r.email || 'Không cung cấp'}\nNgày dự kiến: ${r.date}\nGiờ dự kiến: ${r.time}\nSố khách / suất: ${r.guests}\nGhi chú: ${r.note || 'Không có'}\n\nViệc cần làm: kiểm tra khả năng phục vụ, liên hệ khách, rồi tạo sự kiện Calendar sau khi xác nhận.`;
   MailApp.sendEmail(SETTINGS.notificationEmail, subject, body);
 }
 

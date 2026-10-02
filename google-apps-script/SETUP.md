@@ -13,10 +13,11 @@ This preserves the distinction between **request received** and **booking confir
 
 1. Sign in as `nhahangmyyen88@gmail.com` and open Google Apps Script.
 2. Create a project named `Mỹ Yến Website Requests` and replace its default code with `Code.gs`.
-3. Deploy as a Web App. Run as: the restaurant Gmail account. Access: anyone.
-4. Approve Sheets, Gmail, and Calendar permissions when Google requests them.
-5. Copy the deployed `/exec` URL into the website configuration.
-6. Create the calendar automatically on the first confirmed event, then share it with appropriate staff as **See all event details** or **Make changes to events**, according to their role.
+3. In **Project Settings → Script properties**, add `REQUEST_SHEET_ID` with value `1SGHBJwgJXMuDToSKKlLA5jwmRu2qcpxZ8JUCJuRKaIs`. This connects the form to the existing `Mỹ Yến — Website Requests` tracker instead of creating a duplicate.
+4. Deploy as a Web App. Run as: the restaurant Gmail account. Access: anyone.
+5. Approve Sheets, Gmail, and Calendar permissions when Google requests them.
+6. Copy the deployed `/exec` URL into `reservation-config.js`.
+7. The first confirmed booking creates the dedicated `Mỹ Yến Reservations & Events` calendar. Share that calendar with staff as **See all event details** or **Make changes to events**, according to their role.
 
 ## Staff operating rule
 
