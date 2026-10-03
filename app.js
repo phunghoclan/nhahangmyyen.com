@@ -34,3 +34,69 @@ if (pathPanel) document.querySelectorAll('[data-path]').forEach(button => button
   if (item.primaryHref.startsWith('http')) { primary.target = '_blank'; primary.rel = 'noopener'; } else { primary.removeAttribute('target'); primary.removeAttribute('rel'); }
   const secondary = document.querySelector('#path-secondary'); secondary.textContent = item.secondary; secondary.href = item.secondaryHref;
 }));
+
+const groupHelper = document.querySelector('#group-helper');
+if (groupHelper) {
+  const choices = { occasion: '', guests: '', space: '' };
+  const summary = document.querySelector('#group-summary-text');
+  const copyButton = document.querySelector('#copy-group-request');
+  const status = document.querySelector('#group-copy-status');
+  const dateInput = document.querySelector('#group-date');
+  const timeInput = document.querySelector('#group-time');
+
+  const formatDate = value => {
+    if (!value) return 'Chưa xác định';
+    const [year, month, day] = value.split('-');
+    return day && month && year ? day + '/' + month + '/' + year : value;
+  };
+
+  const requestMessage = () => 'Chào Nhà Hàng Mỹ Yến, tôi muốn tư vấn tiệc.\n\n'
+    + '- Dịp: ' + (choices.occasion || 'Chưa xác định') + '\n'
+    + '- Số khách: ' + (choices.guests || 'Chưa xác định') + '\n'
+    + '- Ngày dự kiến: ' + formatDate(dateInput.value) + '\n'
+    + '- Buổi: ' + (timeInput.value || 'Chưa xác định') + '\n'
+    + '- Không gian: ' + (choices.space || 'Chưa xác định') + '\n\n'
+    + 'Xin Mỹ Yến tư vấn giúp tôi. Cảm ơn.';
+
+  const updateSummary = () => {
+    const ready = choices.occasion && choices.guests && choices.space;
+    copyButton.disabled = !ready;
+    if (!ready) {
+      summary.textContent = 'Chọn dịp, số khách và không gian để tạo bản tóm tắt.';
+      return;
+    }
+    summary.textContent = choices.occasion + ' · ' + choices.guests + ' · ' + formatDate(dateInput.value) + ' · ' + (timeInput.value || 'Chưa xác định') + ' · ' + choices.space + '.';
+  };
+
+  groupHelper.querySelectorAll('[data-group] button').forEach(button => button.addEventListener('click', () => {
+    const group = button.closest('[data-group]');
+    choices[group.dataset.group] = button.dataset.value;
+    group.querySelectorAll('button').forEach(choice => {
+      const selected = choice === button;
+      choice.classList.toggle('is-selected', selected);
+      choice.setAttribute('aria-pressed', String(selected));
+    });
+    status.textContent = 'Sau khi sao chép, mở Zalo và dán nội dung vào cuộc trò chuyện với Mỹ Yến.';
+    updateSummary();
+  }));
+
+  [dateInput, timeInput].forEach(input => input.addEventListener('change', updateSummary));
+
+  copyButton.addEventListener('click', async () => {
+    const text = requestMessage();
+    try {
+      await navigator.clipboard.writeText(text);
+    } catch {
+      const fallback = document.createElement('textarea');
+      fallback.value = text;
+      fallback.style.position = 'fixed';
+      fallback.style.opacity = '0';
+      document.body.appendChild(fallback);
+      fallback.select();
+      document.execCommand('copy');
+      fallback.remove();
+    }
+    copyButton.textContent = 'Đã sao chép yêu cầu';
+    status.textContent = 'Đã sao chép. Bây giờ mở Zalo và dán nội dung để Mỹ Yến tư vấn.';
+  });
+}
