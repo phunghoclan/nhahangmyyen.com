@@ -94,7 +94,9 @@ function sendGuestAcknowledgement_(r) {
  */
 function setupWorkflow() {
   const cleanup = normalizeInquirySheet();
+  const format = formatInquirySheet();
   const protection = configureInquirySheetProtection();
+  const guide = createStaffGuide();
   const sheetId = getOrCreateRequestSheet_().getParent().getId();
   const calendar = getOrCreateCalendar_();
   const handler = 'handleRequestStatusChange_';
@@ -104,7 +106,39 @@ function setupWorkflow() {
   if (!hasTrigger) {
     ScriptApp.newTrigger(handler).forSpreadsheet(sheetId).onEdit().create();
   }
-  return `${cleanup} ${protection} Calendar: ${calendar.getName()}. Trigger: ${hasTrigger ? 'đã có' : 'vừa tạo'}.`;
+  return `${cleanup} ${format} ${protection} ${guide} Calendar: ${calendar.getName()}. Trigger: ${hasTrigger ? 'đã có' : 'vừa tạo'}.`;
+}
+
+/** Creates a simple Vietnamese operating guide without overwriting an existing guide. */
+function createStaffGuide() {
+  const spreadsheet = getOrCreateRequestSheet_().getParent();
+  const existing = spreadsheet.getSheetByName('Hướng dẫn nhân viên');
+  if (existing) return 'Hướng dẫn nhân viên: đã có.';
+
+  const sheet = spreadsheet.insertSheet('Hướng dẫn nhân viên');
+  const rows = [
+    ['NHÀ HÀNG MỸ YẾN — HƯỚNG DẪN XỬ LÝ YÊU CẦU TỪ WEBSITE', '', ''],
+    ['Bước', 'Việc cần làm', 'Thao tác trong bảng Yêu cầu'],
+    ['1', 'Có yêu cầu mới', 'Mở email nhahangmyyen88@gmail.com hoặc bảng Yêu cầu. Phản hồi trong 30–60 phút trong giờ hoạt động.'],
+    ['2', 'Kiểm tra khả năng phục vụ', 'Xem Ngày dự kiến, Giờ dự kiến, số khách/suất và Ghi chú của khách.'],
+    ['3', 'Ngày giờ khách yêu cầu còn phục vụ được', 'Điền Người phụ trách nếu cần, rồi đổi Trạng thái thành Đã xác nhận. Hệ thống tự tạo lịch và gửi email xác nhận nếu khách có email.'],
+    ['4', 'Ngày giờ khách yêu cầu không còn phù hợp', 'Đổi Trạng thái thành Đang tư vấn hoặc Chờ khách. Liên hệ khách để thống nhất lịch mới.'],
+    ['5', 'Khách đã đồng ý lịch mới', 'Điền đủ Ngày đã chốt và Giờ đã chốt, sau đó đổi Trạng thái thành Đã xác nhận. Không sửa Ngày/Giờ dự kiến của khách.'],
+    ['6', 'Khách đổi lịch sau khi đã xác nhận', 'Đổi Trạng thái thành Đang tư vấn, cập nhật Ngày/Giờ đã chốt, rồi đổi lại Đã xác nhận. Lịch Google được cập nhật, không tạo lịch trùng.'],
+    ['7', 'Ghi chú cho nội bộ', 'Dùng cột Người phụ trách và Ghi chú nội bộ. Không sửa Ghi chú của khách.'],
+    ['8', 'Khách không có email', 'Gọi điện hoặc nhắn Zalo 0948 900 488 để xác nhận.'],
+    ['Lưu ý', 'Các cột thông tin khách và Mã sự kiện Calendar được khóa để tránh sửa nhầm.', '']
+  ];
+  sheet.getRange(1, 1, rows.length, 3).setValues(rows);
+  sheet.getRange('A1:C1').merge().setFontWeight('bold').setFontSize(14).setBackground('#4b2e23').setFontColor('#ffffff');
+  sheet.getRange('A2:C2').setFontWeight('bold').setBackground('#d9ead3');
+  sheet.setFrozenRows(2);
+  sheet.setColumnWidths(1, 1, 80);
+  sheet.setColumnWidths(2, 1, 260);
+  sheet.setColumnWidths(3, 1, 640);
+  sheet.getDataRange().setWrap(true).setVerticalAlignment('top');
+  sheet.autoResizeRows(1, rows.length);
+  return 'Đã tạo Hướng dẫn nhân viên.';
 }
 
 /**
@@ -134,6 +168,25 @@ function normalizeInquirySheet() {
   sheet.getRange(2, 3, rows, 1).setDataValidation(serviceRule);
   sheet.getRange(2, 11, rows, 1).setDataValidation(statusRule);
   return `Đã xóa ${removed} dòng kiểm tra và chuẩn hóa danh sách chọn tiếng Việt.`;
+}
+
+/** Applies a readable, consistent layout without changing customer records. */
+function formatInquirySheet() {
+  const sheet = getOrCreateRequestSheet_();
+  const header = sheet.getRange(1, 1, 1, 16);
+  header.setFontWeight('bold').setFontColor('#ffffff').setVerticalAlignment('middle');
+  sheet.getRange(1, 1, 1, 12).setBackground('#4b2e23');
+  sheet.getRange(1, 13, 1, 4).setBackground('#0f5968');
+  sheet.setRowHeight(1, 48);
+  sheet.setFrozenRows(1);
+  sheet.setFrozenColumns(2);
+  sheet.setTabColor('#4b2e23');
+
+  const widths = [130, 145, 170, 200, 140, 220, 130, 110, 125, 280, 170, 160, 135, 120, 150, 280];
+  widths.forEach((width, index) => sheet.setColumnWidth(index + 1, width));
+  sheet.getRange('J:P').setWrap(true).setVerticalAlignment('top');
+  sheet.hideColumns(12); // Calendar ID is technical; the system still reads and updates it.
+  return 'Đã định dạng bảng Yêu cầu và ẩn cột kỹ thuật Calendar.';
 }
 
 /**
