@@ -147,7 +147,7 @@ document.querySelectorAll('[data-request-helper]').forEach(helper => {
       label: group.dataset.label,
       value: selections[group.dataset.requestGroup]
     }));
-    inputs.forEach(input => lines.push({
+    inputs.filter(input => input.value || !input.hasAttribute('data-optional')).forEach(input => lines.push({
       label: input.dataset.label,
       value: input.value ? (input.type === 'date' ? formatRequestDate(input.value) : input.value) : 'Chưa xác định'
     }));
@@ -158,7 +158,8 @@ document.querySelectorAll('[data-request-helper]').forEach(helper => {
     const ready = groups.filter(group => group.dataset.required === 'true').every(group => selections[group.dataset.requestGroup]);
     copyButton.disabled = !ready;
     const lines = selectedLines();
-    summary.textContent = ready ? lines.map(line => line.value).join(' · ') + '.' : defaultSummary;
+    const summaryText = lines.map(line => line.value).join(' · ').replace(/[.。]+$/, '');
+    summary.textContent = ready ? summaryText + '.' : defaultSummary;
   };
 
   groups.forEach(group => group.querySelectorAll('button').forEach(button => button.addEventListener('click', () => {
@@ -173,10 +174,14 @@ document.querySelectorAll('[data-request-helper]').forEach(helper => {
     update();
   })));
 
-  inputs.forEach(input => input.addEventListener('change', () => {
+  const updateFromInput = () => {
     copyButton.textContent = 'Sao chép yêu cầu';
     update();
-  }));
+  };
+  inputs.forEach(input => {
+    input.addEventListener('change', updateFromInput);
+    input.addEventListener('input', updateFromInput);
+  });
 
   copyButton.addEventListener('click', async () => {
     const message = 'Chào Nhà Hàng Mỹ Yến, tôi muốn ' + helper.dataset.requestType + '.\n\n'
