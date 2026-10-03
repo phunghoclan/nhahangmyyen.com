@@ -142,20 +142,25 @@ document.querySelectorAll('[data-request-helper]').forEach(helper => {
   const status = helper.querySelector('.request-copy-status');
   const defaultSummary = summary.textContent;
 
+  const inputLines = subset => subset.filter(input => input.value || !input.hasAttribute('data-optional')).map(input => ({
+    label: input.dataset.label,
+    value: input.value ? (input.type === 'date' ? formatRequestDate(input.value) : input.value) : 'Chưa xác định'
+  }));
+
   const selectedLines = () => {
-    const lines = groups.filter(group => selections[group.dataset.requestGroup]).map(group => ({
+    const priorityInputs = inputs.filter(input => input.hasAttribute('data-request-priority'));
+    const regularInputs = inputs.filter(input => !input.hasAttribute('data-request-priority'));
+    const groupLines = groups.filter(group => selections[group.dataset.requestGroup]).map(group => ({
       label: group.dataset.label,
       value: selections[group.dataset.requestGroup]
     }));
-    inputs.filter(input => input.value || !input.hasAttribute('data-optional')).forEach(input => lines.push({
-      label: input.dataset.label,
-      value: input.value ? (input.type === 'date' ? formatRequestDate(input.value) : input.value) : 'Chưa xác định'
-    }));
-    return lines;
+    return [...inputLines(priorityInputs), ...groupLines, ...inputLines(regularInputs)];
   };
 
   const update = () => {
-    const ready = groups.filter(group => group.dataset.required === 'true').every(group => selections[group.dataset.requestGroup]);
+    const groupsReady = groups.filter(group => group.dataset.required === 'true').every(group => selections[group.dataset.requestGroup]);
+    const inputsReady = inputs.filter(input => input.hasAttribute('data-required')).every(input => input.value.trim());
+    const ready = groupsReady && inputsReady;
     copyButton.disabled = !ready;
     const lines = selectedLines();
     const summaryText = lines.map(line => line.value).join(' · ').replace(/[.。]+$/, '');
