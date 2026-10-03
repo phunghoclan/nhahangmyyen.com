@@ -14,25 +14,38 @@ const SETTINGS = {
 };
 
 function doPost(e) {
-  const data = e.parameter && Object.keys(e.parameter).length
-    ? e.parameter
-    : JSON.parse(e.postData.contents || '{}');
-  if (data.website) return json_({ ok: true });
-  const required = ['type', 'name', 'phone', 'date', 'time', 'guests'];
-  const missing = required.filter(key => !String(data[key] || '').trim());
-  if (missing.length) return json_({ ok: false, error: 'Thiếu thông tin bắt buộc.' });
+  let requestId = '';
+  try {
+    const data = e.parameter && Object.keys(e.parameter).length
+      ? e.parameter
+      : JSON.parse(e.postData.contents || '{}');
+    requestId = requestId_(data.requestId);
+    if (data.website) return confirmationPage_({ source: 'myyen-request', ok: true, requestId: requestId });
 
-  const request = {
-    id: Utilities.getUuid().slice(0, 8).toUpperCase(),
-    createdAt: new Date(),
-    type: safe_(data.type), name: safe_(data.name), phone: safe_(data.phone),
-    email: safe_(data.email), date: safe_(data.date), time: safe_(data.time), guests: safe_(data.guests),
-    note: safe_(data.note), status: 'Mới — cần kiểm tra chỗ'
-  };
-  appendRequest_(request);
-  sendStaffAlert_(request);
-  if (request.email) sendGuestAcknowledgement_(request);
-  return json_({ ok: true, requestId: request.id });
+    const type = safe_(data.type);
+    const required = ['name', 'phone', 'guests'];
+    if (type !== 'Suất ăn doanh nghiệp') required.push('date');
+    if (type === 'Đặt bàn dùng bữa') required.push('time');
+    if (type === 'Suất ăn doanh nghiệp') required.push('company');
+    const missing = required.filter(key => !safe_(data[key]));
+    if (!type || missing.length) throw new Error('Thiếu thông tin bắt buộc.');
+
+    const request = {
+      id: requestId, createdAt: new Date(), type: type,
+      name: safe_(data.name), company: safe_(data.company), phone: safe_(data.phone),
+      email: safe_(data.email), date: safe_(data.date), time: safe_(data.time),
+      guests: safe_(data.guests), note: safe_(data.note), status: 'Mới — cần kiểm tra chỗ'
+    };
+    const created = appendRequest_(request);
+    if (created) {
+      sendStaffAlert_(request);
+      if (request.email) sendGuestAcknowledgement_(request);
+    }
+    return confirmationPage_({ source: 'myyen-request', ok: true, requestId: request.id });
+  } catch (error) {
+    console.error(error);
+    return confirmationPage_({ source: 'myyen-request', ok: false, requestId: requestId, error: 'Không thể tiếp nhận yêu cầu.' });
+  }
 }
 
 function appendRequest_(r) {
@@ -46,12 +59,14 @@ function appendRequest_(r) {
     sheet.appendRow(['Mã yêu cầu','Nhận lúc','Loại yêu cầu','Tên khách / công ty','Điện thoại','Email','Ngày dự kiến','Giờ dự kiến','Số khách / suất','Ghi chú','Trạng thái','Mã sự kiện Calendar']);
     props.setProperty('REQUEST_SHEET_ID', ss.getId());
   } else sheet = SpreadsheetApp.openById(id).getSheetByName('Yêu cầu');
-  sheet.appendRow([r.id,r.createdAt,r.type,r.name,r.phone,r.email,r.date,r.time,r.guests,r.note,r.status,'']);
+  if (findRequestRow_(sheet, r.id)) return false;
+  sheet.appendRow([r.id,r.createdAt,r.type,r.name,r.phone,r.email,r.date,r.time,r.guests,notesFor_(r),r.status,'']);
+  return true;
 }
 
 function sendStaffAlert_(r) {
   const subject = `[Mỹ Yến] Yêu cầu mới ${r.id}: ${r.type}`;
-  const body = `Yêu cầu mới từ website\n\nMã: ${r.id}\nLoại: ${r.type}\nKhách / công ty: ${r.name}\nĐiện thoại: ${r.phone}\nEmail: ${r.email || 'Không cung cấp'}\nNgày dự kiến: ${r.date}\nGiờ dự kiến: ${r.time}\nSố khách / suất: ${r.guests}\nGhi chú: ${r.note || 'Không có'}\n\nViệc cần làm: kiểm tra khả năng phục vụ, liên hệ khách, rồi tạo sự kiện Calendar sau khi xác nhận.`;
+  const body = `Yêu cầu mới từ website\n\nMã: ${r.id}\nLoại: ${r.type}\nNgười liên hệ: ${r.name}\nCông ty / đơn vị: ${r.company || 'Không áp dụng'}\nĐiện thoại: ${r.phone}\nEmail: ${r.email || 'Không cung cấp'}\nNgày dự kiến: ${r.date || 'Chưa chốt'}\nGiờ dự kiến: ${r.time || 'Chưa chốt'}\nSố khách / suất: ${r.guests}\nGhi chú: ${r.note || 'Không có'}\n\nViệc cần làm: kiểm tra khả năng phục vụ, liên hệ khách, rồi tạo sự kiện Calendar sau khi xác nhận.`;
   MailApp.sendEmail(SETTINGS.notificationEmail, subject, body);
 }
 
@@ -100,6 +115,11 @@ function handleRequestStatusChange_(e) {
       phone: safe_(values[4]), email: safe_(values[5]), date: values[6], time: values[7],
       guests: safe_(values[8]), note: safe_(values[9])
     };
+    if (!request.date || !request.time) {
+      sheet.getRange(row, 12).setValue('Chưa tạo — cần ngày/giờ');
+      if (request.email) sendGuestConfirmationWithoutSchedule_(request);
+      return;
+    }
     const start = requestDateTime_(request.date, request.time);
     const end = new Date(start.getTime() + SETTINGS.eventDurationMinutes * 60 * 1000);
     const title = `${request.type} — ${request.name} — ${request.guests} khách/suất`;
@@ -117,6 +137,12 @@ function sendGuestConfirmation_(r) {
   const timeText = Utilities.formatDate(requestDateTime_(r.date, r.time), SETTINGS.timeZone, 'HH:mm');
   const subject = `${SETTINGS.businessName} xác nhận yêu cầu ${r.id}`;
   const body = `Chào ${r.name},\n\nMỹ Yến xác nhận yêu cầu ${r.id} của bạn.\n\nLoại yêu cầu: ${r.type}\nNgày: ${dateText}\nGiờ: ${timeText}\nSố khách / suất: ${r.guests}\n\nNếu cần thay đổi, vui lòng gọi hoặc nhắn Zalo 0948 900 488.\n\nTrân trọng,\n${SETTINGS.businessName}`;
+  MailApp.sendEmail(r.email, subject, body);
+}
+
+function sendGuestConfirmationWithoutSchedule_(r) {
+  const subject = `${SETTINGS.businessName} xác nhận yêu cầu ${r.id}`;
+  const body = `Chào ${r.name},\n\nMỹ Yến xác nhận yêu cầu ${r.id} của bạn. Đội ngũ sẽ liên hệ để chốt ngày và giờ phục vụ.\n\nLoại yêu cầu: ${r.type}\nSố khách / suất: ${r.guests}\n\nNếu cần thay đổi, vui lòng gọi hoặc nhắn Zalo 0948 900 488.\n\nTrân trọng,\n${SETTINGS.businessName}`;
   MailApp.sendEmail(r.email, subject, body);
 }
 
@@ -177,5 +203,24 @@ function getOrCreateCalendar_() {
 
 function json_(payload) {
   return ContentService.createTextOutput(JSON.stringify(payload)).setMimeType(ContentService.MimeType.JSON);
+}
+function confirmationPage_(payload) {
+  const message = JSON.stringify(payload).replace(/</g, '\\u003c');
+  const html = `<!doctype html><html><body><script>window.top.postMessage(${message}, '*');</script></body></html>`;
+  return HtmlService.createHtmlOutput(html).setXFrameOptionsMode(HtmlService.XFrameOptionsMode.ALLOWALL);
+}
+function requestId_(value) {
+  const supplied = safe_(value).replace(/[^A-Za-z0-9-]/g, '').slice(0, 32);
+  return supplied || `MYY-${Utilities.getUuid().slice(0, 8).toUpperCase()}`;
+}
+function findRequestRow_(sheet, requestId) {
+  const lastRow = sheet.getLastRow();
+  if (lastRow < 2) return 0;
+  const ids = sheet.getRange(2, 1, lastRow - 1, 1).getDisplayValues();
+  const index = ids.findIndex(row => row[0] === requestId);
+  return index < 0 ? 0 : index + 2;
+}
+function notesFor_(r) {
+  return [r.company ? `Đơn vị: ${r.company}` : '', r.note].filter(Boolean).join('\n');
 }
 function safe_(value) { return String(value || '').trim().slice(0, 2000); }
