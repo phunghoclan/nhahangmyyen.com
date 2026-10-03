@@ -99,6 +99,35 @@ function setupWorkflow() {
 }
 
 /**
+ * One-time staff cleanup: removes known internal test records and standardizes
+ * the Vietnamese dropdowns used by the inquiry team.
+ */
+function normalizeInquirySheet_() {
+  const sheet = getOrCreateRequestSheet_();
+  const testIds = new Set(['TEST-001', 'B7AE6044', 'B47C3DBF', 'FF13BC7A']);
+  let removed = 0;
+  for (let row = sheet.getLastRow(); row >= 2; row -= 1) {
+    if (testIds.has(String(sheet.getRange(row, 1).getDisplayValue()).trim())) {
+      sheet.deleteRow(row);
+      removed += 1;
+    }
+  }
+
+  const rows = Math.max(sheet.getMaxRows() - 1, 1);
+  const serviceRule = SpreadsheetApp.newDataValidation()
+    .requireValueInList(['Đặt bàn dùng bữa', 'Tiệc / sự kiện', 'Suất ăn doanh nghiệp'], true)
+    .setAllowInvalid(false)
+    .build();
+  const statusRule = SpreadsheetApp.newDataValidation()
+    .requireValueInList(['Mới — cần kiểm tra chỗ', 'Đã liên hệ', 'Đang tư vấn', 'Chờ khách', 'Đã xác nhận', 'Không phù hợp'], true)
+    .setAllowInvalid(false)
+    .build();
+  sheet.getRange(2, 3, rows, 1).setDataValidation(serviceRule);
+  sheet.getRange(2, 11, rows, 1).setDataValidation(statusRule);
+  return `Đã xóa ${removed} dòng kiểm tra và chuẩn hóa danh sách chọn tiếng Việt.`;
+}
+
+/**
  * Tự động chạy khi nhân viên đổi Trạng thái thành “Đã xác nhận”.
  */
 function handleRequestStatusChange_(e) {
