@@ -66,7 +66,14 @@ function getOrCreateRequestSheet_() {
     sheet.appendRow(['Mã yêu cầu','Nhận lúc','Loại yêu cầu','Tên khách / công ty','Điện thoại','Email','Ngày dự kiến','Giờ dự kiến','Số khách / suất','Ghi chú','Trạng thái','Mã sự kiện Calendar']);
     props.setProperty('REQUEST_SHEET_ID', ss.getId());
   } else sheet = SpreadsheetApp.openById(id).getSheetByName('Yêu cầu');
+  ensureStaffActionColumns_(sheet);
   return sheet;
+}
+
+function ensureStaffActionColumns_(sheet) {
+  sheet.getRange(1, 13, 1, 4).setValues([[
+    'Ngày đã chốt', 'Giờ đã chốt', 'Người phụ trách', 'Ghi chú nội bộ'
+  ]]);
 }
 
 function sendStaffAlert_(r) {
@@ -143,8 +150,8 @@ function configureInquirySheetProtection() {
     .forEach(protection => protection.remove());
 
   // A–J contains website-submitted details. L contains the Calendar event ID.
-  // K1 is protected separately so staff can change K2:K without changing its heading.
-  ['A:J', 'L:L', 'K1'].forEach(a1Notation => {
+  // K2:K and M2:P are the only daily staff-action fields.
+  ['A:J', 'L:L', 'K1', 'M1:P1'].forEach(a1Notation => {
     const protection = sheet.getRange(a1Notation).protect().setDescription(marker);
     protection.addEditor(ownerEmail);
     const otherEditors = protection.getEditors()
@@ -153,7 +160,7 @@ function configureInquirySheetProtection() {
     if (protection.canDomainEdit()) protection.setDomainEdit(false);
   });
 
-  return 'Đã khóa dữ liệu khách; nhân viên chỉ sửa cột Trạng thái.';
+  return 'Đã khóa dữ liệu khách; nhân viên sửa Trạng thái, lịch đã chốt và ghi chú nội bộ.';
 }
 
 /**
@@ -170,11 +177,12 @@ function handleRequestStatusChange_(e) {
   if (!lock.tryLock(10000)) return;
   try {
     const row = range.getRow();
-    const values = sheet.getRange(row, 1, 1, 12).getValues()[0];
-    if (String(values[10]).trim() !== SETTINGS.confirmedStatus || values[11]) return;
+    const values = sheet.getRange(row, 1, 1, 16).getValues()[0];
+    if (String(values[10]).trim() !== SETTINGS.confirmedStatus) return;
+    const schedule = confirmedSchedule_(values);
     const request = {
       id: safe_(values[0]), createdAt: values[1], type: safe_(values[2]), name: safe_(values[3]),
-      phone: safe_(values[4]), email: safe_(values[5]), date: values[6], time: values[7],
+      phone: safe_(values[4]), email: safe_(values[5]), date: schedule.date, time: schedule.time,
       guests: safe_(values[8]), note: safe_(values[9])
     };
     if (!request.date || !request.time) {
@@ -186,12 +194,30 @@ function handleRequestStatusChange_(e) {
     const end = new Date(start.getTime() + SETTINGS.eventDurationMinutes * 60 * 1000);
     const title = `${request.type} — ${request.name} — ${request.guests} khách/suất`;
     const description = `Mã yêu cầu: ${request.id}\nKhách / công ty: ${request.name}\nĐiện thoại: ${request.phone}\nEmail: ${request.email || 'Không cung cấp'}\nSố khách / suất: ${request.guests}\nGhi chú: ${request.note || 'Không có'}\n\nĐã được nhân viên chuyển sang trạng thái Đã xác nhận.`;
-    const event = findConfirmedEvent_(request.id, start, end) || createConfirmedEvent_(title, start, end, description);
+    const calendar = getOrCreateCalendar_();
+    let event = values[11] ? calendar.getEventById(values[11]) : null;
+    if (event) {
+      event.setTitle(title).setTime(start, end).setDescription(description);
+    } else {
+      event = findConfirmedEvent_(request.id, start, end) || createConfirmedEvent_(title, start, end, description);
+    }
     sheet.getRange(row, 12).setValue(event.getId());
     if (request.email) sendGuestConfirmation_(request);
   } finally {
     lock.releaseLock();
   }
+}
+
+function confirmedSchedule_(values) {
+  const confirmedDate = values[12];
+  const confirmedTime = values[13];
+  if (confirmedDate || confirmedTime) {
+    if (!confirmedDate || !confirmedTime) {
+      throw new Error('Cần điền đủ Ngày đã chốt và Giờ đã chốt trước khi xác nhận.');
+    }
+    return { date: confirmedDate, time: confirmedTime };
+  }
+  return { date: values[6], time: values[7] };
 }
 
 function sendGuestConfirmation_(r) {
