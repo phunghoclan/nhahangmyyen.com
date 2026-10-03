@@ -4,3 +4,4 @@
 .sites-runtime/
 *.log
 dist/
+.wrangler/

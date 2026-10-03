@@ -3,5 +3,15 @@
   "compatibility_date": "2026-10-02",
   "assets": {
     "directory": "./dist"
-  }
+  },
+  "routes": [
+    {
+      "pattern": "nhahangmyyen.com",
+      "custom_domain": true
+    },
+    {
+      "pattern": "www.nhahangmyyen.com",
+      "custom_domain": true
+    }
+  ]
 }
