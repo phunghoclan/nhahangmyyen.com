@@ -206,9 +206,9 @@ footer a {
 .group-helper-grid { max-width: 1180px; margin: 0 auto; display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(300px, .75fr); gap: 1.25rem; align-items: start; }
 .group-helper-steps { display: grid; gap: 1px; background: rgba(25,59,50,.2); border: 1px solid rgba(25,59,50,.2); }
 .helper-step { margin: 0; padding: 1.6rem; border: 0; background: #fffdf8; }
-.helper-step legend { width: 100%; padding: 0; color: var(--jade); font: 600 1.35rem/1.2 "Playfair Display", serif; }
-.helper-step legend span { color: var(--aged-gold); margin-right: .6rem; font-size: .95rem; }
-.helper-step legend small { display: inline-block; margin-left: .6rem; color: #6a695f; font: 500 .76rem "Be Vietnam Pro", sans-serif; }
+.helper-step-title { margin: 0; padding: 0; color: var(--jade); font: 600 1.35rem/1.2 "Playfair Display", serif; }
+.helper-step-title span { color: var(--aged-gold); margin-right: .6rem; font-size: .95rem; }
+.helper-step-title small { display: inline-block; margin-left: .6rem; color: #6a695f; font: 500 .76rem "Be Vietnam Pro", sans-serif; }
 .choice-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: .65rem; margin-top: 1rem; }
 .choice-grid-compact { grid-template-columns: repeat(4, 1fr); }
 .choice-grid button { min-height: 54px; padding: .7rem; border: 1px solid rgba(25,59,50,.25); background: #f7f1e6; color: var(--ink); font: 600 .87rem/1.3 "Be Vietnam Pro", sans-serif; cursor: pointer; transition: background .18s ease, border-color .18s ease, color .18s ease; }
