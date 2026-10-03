@@ -5,7 +5,7 @@ rm -rf dist
 mkdir -p dist/assets
 
 cp index.html menu.html spaces.html events.html corporate-catering.html visit.html dist/
-cp app.js enhancements.css reservation-config.js styles.css llms.txt robots.txt sitemap.xml dist/
+cp app.js enhancements.css styles.css llms.txt robots.txt sitemap.xml dist/
 cp _headers dist/
 cp assets/* dist/assets/
 
