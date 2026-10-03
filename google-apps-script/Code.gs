@@ -49,6 +49,13 @@ function doPost(e) {
 }
 
 function appendRequest_(r) {
+  const sheet = getOrCreateRequestSheet_();
+  if (findRequestRow_(sheet, r.id)) return false;
+  sheet.appendRow([r.id,r.createdAt,r.type,r.name,r.phone,r.email,r.date,r.time,r.guests,notesFor_(r),r.status,'']);
+  return true;
+}
+
+function getOrCreateRequestSheet_() {
   const props = PropertiesService.getScriptProperties();
   let id = props.getProperty('REQUEST_SHEET_ID');
   let sheet;
@@ -59,9 +66,7 @@ function appendRequest_(r) {
     sheet.appendRow(['Mã yêu cầu','Nhận lúc','Loại yêu cầu','Tên khách / công ty','Điện thoại','Email','Ngày dự kiến','Giờ dự kiến','Số khách / suất','Ghi chú','Trạng thái','Mã sự kiện Calendar']);
     props.setProperty('REQUEST_SHEET_ID', ss.getId());
   } else sheet = SpreadsheetApp.openById(id).getSheetByName('Yêu cầu');
-  if (findRequestRow_(sheet, r.id)) return false;
-  sheet.appendRow([r.id,r.createdAt,r.type,r.name,r.phone,r.email,r.date,r.time,r.guests,notesFor_(r),r.status,'']);
-  return true;
+  return sheet;
 }
 
 function sendStaffAlert_(r) {
@@ -81,8 +86,7 @@ function sendGuestAcknowledgement_(r) {
  * Hàm này tạo lịch riêng và cài trình kích hoạt để theo dõi cột Trạng thái.
  */
 function setupWorkflow() {
-  const sheetId = PropertiesService.getScriptProperties().getProperty('REQUEST_SHEET_ID');
-  if (!sheetId) throw new Error('Chưa có thuộc tính REQUEST_SHEET_ID.');
+  const sheetId = getOrCreateRequestSheet_().getParent().getId();
   const calendar = getOrCreateCalendar_();
   const handler = 'handleRequestStatusChange_';
   const hasTrigger = ScriptApp.getProjectTriggers().some(trigger =>
