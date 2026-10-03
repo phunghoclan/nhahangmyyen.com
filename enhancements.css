@@ -185,3 +185,18 @@ footer a {
 .brand::after { content:"MỸ YẾN"; color:var(--jade); font:700 1rem/1 "Playfair Display",serif; letter-spacing:.1em; white-space:nowrap; }
 .brand img { width:49px; height:49px; }
 @media (max-width:540px) { .brand img{width:43px;height:43px}.brand::after{font-size:.86rem} }
+
+/* Search-friendly menu structure */
+.menu-hero { min-height:620px; background:linear-gradient(130deg,rgba(25,59,50,.92),rgba(73,90,60,.72)),url("assets/egg-tarts.jpg") center/cover; }
+.menu-skeleton-grid { max-width:1180px; margin:0 auto; display:grid; grid-template-columns:repeat(3,1fr); gap:1rem; }
+.menu-skeleton-card { min-height:290px; padding:1.8rem; border:1px solid rgba(25,59,50,.18); background:#fffdf8; display:flex; flex-direction:column; }
+.menu-skeleton-card:nth-child(1), .menu-skeleton-card:nth-child(5) { background:var(--jade); color:var(--ivory); }
+.menu-skeleton-card > span { color:var(--aged-gold); font:600 1rem "Playfair Display",serif; }
+.menu-skeleton-card h3 { margin-top:2rem; font-size:1.7rem; }
+.menu-skeleton-card small { margin-top:auto; color:#65665e; font-size:.78rem; }
+.menu-skeleton-card:nth-child(1) small, .menu-skeleton-card:nth-child(5) small { color:#ddd5c6; }
+.menu-by-occasion { background:#eee5d4; }
+.occasion-grid { max-width:1180px; margin:0 auto; display:grid; grid-template-columns:repeat(3,1fr); gap:1rem; }
+.occasion-grid article { padding:2rem; background:var(--ivory); border-top:3px solid var(--aged-gold); }
+.occasion-grid h3 { font-size:1.6rem; }
+@media (max-width:800px) { .menu-skeleton-grid,.occasion-grid{grid-template-columns:1fr}.menu-skeleton-card{min-height:220px}.menu-skeleton-card h3{margin-top:1rem} }
