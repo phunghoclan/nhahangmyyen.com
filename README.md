@@ -1,19 +1,31 @@
 # Nhà Hàng Mỹ Yến website
 
-Static first-version marketing site for `nhahangmyyen.com`.
+Static marketing site for [nhahangmyyen.com](https://nhahangmyyen.com), published through Cloudflare Workers static assets.
 
-The folder is ready for GitHub Pages. `CNAME`, `.nojekyll`, `robots.txt`, and
-`sitemap.xml` are included for the restaurant's canonical domain.
+## Local check
 
-## Publishing on GitHub Pages
+```sh
+sh scripts/build-site.sh
+```
 
-1. Create a GitHub repository and upload this folder's contents.
-2. In repository Settings, enable GitHub Pages from the `main` branch and `/ (root)`.
-3. Add `nhahangmyyen.com` as the custom domain.
-4. At the domain registrar, configure the DNS records GitHub Pages provides, then enable HTTPS.
+The finished site is created in `dist/`. The build checks all local page and asset links.
 
-## Before the public launch
+## Publish
 
-- Deploy and configure the approval-based Google request workflow in `google-apps-script/`. It sends staff an alert and a guest acknowledgement; calendar events are created only after staff confirms the booking.
-- Confirm restaurant phone number, opening hours, address, social links, map URL, and reservation rules.
-- Confirm each currently listed menu item and price. The source menu photos use handwritten stickers, so prices are intentionally not published in this version.
+```sh
+npx wrangler deploy
+```
+
+The configured domains are `nhahangmyyen.com` and `www.nhahangmyyen.com`.
+
+## Public customer contact
+
+The public site does not accept orders or reservations through a form. Visitors are directed to:
+
+- Zalo: `0948 900 488`
+- Phone: `0948 900 488`
+- Google Maps / direct visit
+
+## Before future content updates
+
+Confirm every listed menu item, price, event package, capacity, and service detail with the restaurant team. The source menu photos use handwritten price stickers, so fixed prices are intentionally not published yet.

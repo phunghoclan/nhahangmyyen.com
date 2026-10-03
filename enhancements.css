@@ -135,3 +135,53 @@ footer a {
   }
   .mobile-actions a:last-child { color: #1f211d; background: #c49d3a; border-right: 0; }
 }
+
+/* Vườn Ngọc & Đồng Cổ — homepage v2 */
+:root { --jade: #193b32; --ivory: #f7f1e6; --aged-gold: #b89245; --lacquer: #8c3b32; --moss: #6f8069; --ink: #20221e; --cream: var(--ivory); --deep: var(--jade); --gold: var(--aged-gold); }
+.topbar { background: rgba(247,241,230,.96); border-color: rgba(25,59,50,.14); }
+.brand img { filter: drop-shadow(0 1px 0 rgba(255,255,255,.9)); }
+.button { border-radius: 0; letter-spacing: .01em; }
+.hero-reframed { min-height: min(760px, calc(100vh - 84px)); }
+.hero-reframed .hero-copy { max-width: 720px; }
+.hero-note { position:absolute; right:clamp(1.5rem,6vw,6rem); bottom:2rem; z-index:1; margin:0; color:#fff; font-size:.78rem; letter-spacing:.08em; text-transform:uppercase; writing-mode:vertical-rl; }
+.pathways { background: var(--ivory); }
+.path-grid { display:grid; grid-template-columns:repeat(4,1fr); max-width:1280px; margin:0 auto; border:1px solid rgba(25,59,50,.25); }
+.path-card { min-height:220px; padding:1.75rem; border:0; border-right:1px solid rgba(25,59,50,.22); background:transparent; color:var(--ink); text-align:left; cursor:pointer; transition:background .22s ease,color .22s ease; font-family:"Be Vietnam Pro",sans-serif; }
+.path-card:last-child { border-right:0; }
+.path-card span { display:block; margin-bottom:2.7rem; color:var(--aged-gold); font:600 1rem "Playfair Display",serif; }
+.path-card strong { display:block; font:600 1.5rem/1.15 "Playfair Display",serif; }
+.path-card small { display:block; margin-top:.8rem; color:#5d625b; font-size:.8rem; }
+.path-card:is(:hover,:focus-visible,.is-active) { background:var(--jade); color:var(--ivory); outline:0; }
+.path-card:is(:hover,:focus-visible,.is-active) small { color:#e5ded0; }
+.path-panel { max-width:1280px; margin:0 auto; padding:clamp(2rem,5vw,4.5rem); display:grid; grid-template-columns:.3fr 1fr auto; align-items:center; gap:2rem; background:#ede4d1; }
+.path-panel .eyebrow { margin:0; }
+.path-panel h3 { font-size:clamp(2rem,3vw,3.3rem); }
+.path-panel p:not(.eyebrow) { max-width:600px; }
+.path-actions { display:flex; flex-direction:column; gap:1rem; align-items:flex-start; white-space:nowrap; }
+.quiet-intro { display:grid; grid-template-columns:1fr 1fr auto; gap:3rem; align-items:end; background:#fffdf8; }
+.quiet-intro .lead { margin:0; }
+.service-split { display:grid; grid-template-columns:1fr 1fr; min-height:600px; background:var(--jade); color:var(--ivory); }
+.service-visual { position:relative; min-height:500px; overflow:hidden; display:flex; align-items:end; padding:clamp(2rem,6vw,6rem); }
+.garden-placeholder { background:linear-gradient(145deg,rgba(17,50,40,.25),rgba(17,50,40,.82)),url("assets/garden-evening.jpg") center/cover; }
+.service-visual h2 { font-size:clamp(2.7rem,5vw,5rem); }
+.service-copy { align-self:center; max-width:610px; padding:clamp(3rem,8vw,8rem); }
+.service-copy .eyebrow { color:#e3bf6a; }
+.check-list { list-style:none; padding:0; margin:2rem 0; }
+.check-list li { margin:.8rem 0; padding-left:1.7rem; position:relative; }
+.check-list li::before { content:""; position:absolute; left:0; top:.53rem; width:.55rem; height:.55rem; border-radius:50%; background:var(--aged-gold); }
+.service-copy .text-link { color:#f2d98b; }
+.menu-glimpse { background:var(--jade); }
+.contact-landing { display:grid; grid-template-columns:1fr auto; align-items:center; gap:3rem; background:#e6dac3; }
+.contact-landing h2 { font-size:clamp(2.8rem,5vw,5.2rem); }
+.contact-landing p { max-width:620px; }
+.contact-promise { color:var(--jade); font-weight:700; }
+.contact-actions { display:flex; flex-direction:column; align-items:stretch; gap:.8rem; min-width:235px; }
+.contact-actions .text-link { text-align:center; margin-top:.5rem; }
+.takeaway-hero { min-height:620px; background:linear-gradient(125deg,#193b32,#536d57); }
+.takeaway-hero .hero-copy { max-width:660px; }
+@media (max-width:900px) { .path-grid{grid-template-columns:1fr 1fr}.path-card:nth-child(2){border-right:0}.path-card:nth-child(-n+2){border-bottom:1px solid rgba(25,59,50,.22)}.path-panel{grid-template-columns:1fr;gap:1rem}.path-actions{flex-direction:row;align-items:center}.quiet-intro{grid-template-columns:1fr;gap:1rem}.service-split{grid-template-columns:1fr}.service-copy{max-width:none}.contact-landing{grid-template-columns:1fr}.contact-actions{align-items:flex-start}.hero-note{display:none}}
+@media (max-width:540px) { .path-grid{grid-template-columns:1fr}.path-card,.path-card:nth-child(2){border-right:0;border-bottom:1px solid rgba(25,59,50,.22);min-height:145px}.path-card:last-child{border-bottom:0}.path-card span{margin-bottom:1.4rem}.path-panel{padding:2rem 1.5rem}.path-actions{flex-wrap:wrap}.service-visual{min-height:420px}.contact-actions{align-items:stretch}.topbar{gap:.5rem}.brand img{width:100px;height:54px} }
+.brand { display:flex; align-items:center; gap:.55rem; }
+.brand::after { content:"MỸ YẾN"; color:var(--jade); font:700 1rem/1 "Playfair Display",serif; letter-spacing:.1em; white-space:nowrap; }
+.brand img { width:49px; height:49px; }
+@media (max-width:540px) { .brand img{width:43px;height:43px}.brand::after{font-size:.86rem} }
