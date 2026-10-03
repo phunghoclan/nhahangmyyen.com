@@ -94,6 +94,7 @@ function sendGuestAcknowledgement_(r) {
  */
 function setupWorkflow() {
   const cleanup = normalizeInquirySheet();
+  const scheduleFields = configureFinalScheduleFields();
   const format = formatInquirySheet();
   const protection = configureInquirySheetProtection();
   const guide = createStaffGuide();
@@ -106,7 +107,7 @@ function setupWorkflow() {
   if (!hasTrigger) {
     ScriptApp.newTrigger(handler).forSpreadsheet(sheetId).onEdit().create();
   }
-  return `${cleanup} ${format} ${protection} ${guide} Calendar: ${calendar.getName()}. Trigger: ${hasTrigger ? 'đã có' : 'vừa tạo'}.`;
+  return `${cleanup} ${scheduleFields} ${format} ${protection} ${guide} Calendar: ${calendar.getName()}. Trigger: ${hasTrigger ? 'đã có' : 'vừa tạo'}.`;
 }
 
 /** Creates a simple Vietnamese operating guide without overwriting an existing guide. */
@@ -123,7 +124,7 @@ function createStaffGuide() {
     ['2', 'Kiểm tra khả năng phục vụ', 'Xem Ngày dự kiến, Giờ dự kiến, số khách/suất và Ghi chú của khách.'],
     ['3', 'Ngày giờ khách yêu cầu còn phục vụ được', 'Điền Người phụ trách nếu cần, rồi đổi Trạng thái thành Đã xác nhận. Hệ thống tự tạo lịch và gửi email xác nhận nếu khách có email.'],
     ['4', 'Ngày giờ khách yêu cầu không còn phù hợp', 'Đổi Trạng thái thành Đang tư vấn hoặc Chờ khách. Liên hệ khách để thống nhất lịch mới.'],
-    ['5', 'Khách đã đồng ý lịch mới', 'Điền đủ Ngày đã chốt và Giờ đã chốt, sau đó đổi Trạng thái thành Đã xác nhận. Không sửa Ngày/Giờ dự kiến của khách.'],
+    ['5', 'Khách đã đồng ý lịch mới', 'Chọn Ngày đã chốt bằng lịch bật lên và Giờ đã chốt từ danh sách. Sau đó đổi Trạng thái thành Đã xác nhận. Không sửa Ngày/Giờ dự kiến của khách.'],
     ['6', 'Khách đổi lịch sau khi đã xác nhận', 'Đổi Trạng thái thành Đang tư vấn, cập nhật Ngày/Giờ đã chốt, rồi đổi lại Đã xác nhận. Lịch Google được cập nhật, không tạo lịch trùng.'],
     ['7', 'Ghi chú cho nội bộ', 'Dùng cột Người phụ trách và Ghi chú nội bộ. Không sửa Ghi chú của khách.'],
     ['8', 'Khách không có email', 'Gọi điện hoặc nhắn Zalo 0948 900 488 để xác nhận.'],
@@ -170,22 +171,49 @@ function normalizeInquirySheet() {
   return `Đã xóa ${removed} dòng kiểm tra và chuẩn hóa danh sách chọn tiếng Việt.`;
 }
 
+/** Makes the finalized schedule easy to enter without changing the customer's request. */
+function configureFinalScheduleFields() {
+  const sheet = getOrCreateRequestSheet_();
+  const rows = Math.max(sheet.getMaxRows() - 1, 1);
+  const dateRule = SpreadsheetApp.newDataValidation()
+    .requireDate()
+    .setAllowInvalid(false)
+    .build();
+  const times = [];
+  for (let hour = 6; hour <= 21; hour += 1) {
+    for (let minute = 0; minute < 60; minute += 30) {
+      if (hour === 21 && minute > 0) continue;
+      times.push(`${String(hour).padStart(2, '0')}:${String(minute).padStart(2, '0')}`);
+    }
+  }
+  const timeRule = SpreadsheetApp.newDataValidation()
+    .requireValueInList(times, true)
+    .setAllowInvalid(false)
+    .build();
+  sheet.getRange(2, 13, rows, 1).setDataValidation(dateRule).setNumberFormat('dd/MM/yyyy');
+  sheet.getRange(2, 14, rows, 1).setDataValidation(timeRule).setNumberFormat('@');
+  return 'Đã thêm lịch chọn ngày và danh sách giờ 30 phút cho lịch đã chốt.';
+}
+
 /** Applies a readable, consistent layout without changing customer records. */
 function formatInquirySheet() {
   const sheet = getOrCreateRequestSheet_();
-  const header = sheet.getRange(1, 1, 1, 16);
-  header.setFontWeight('bold').setFontColor('#ffffff').setVerticalAlignment('middle');
-  sheet.getRange(1, 1, 1, 12).setBackground('#4b2e23');
-  sheet.getRange(1, 13, 1, 4).setBackground('#0f5968');
-  sheet.setRowHeight(1, 48);
-  sheet.setFrozenRows(1);
-  sheet.setFrozenColumns(2);
-  sheet.setTabColor('#4b2e23');
-
+  // Google Tables reject some legacy formatting calls. Keep the workflow working
+  // even when a formatting option is unavailable for this sheet type.
+  const apply = operation => {
+    try { operation(); } catch (error) { console.log(`Bỏ qua định dạng không tương thích: ${error.message}`); }
+  };
+  apply(() => sheet.getRange(1, 1, 1, 16).setFontWeight('bold').setFontColor('#ffffff').setVerticalAlignment('middle'));
+  apply(() => sheet.getRange(1, 1, 1, 12).setBackground('#4b2e23'));
+  apply(() => sheet.getRange(1, 13, 1, 4).setBackground('#0f5968'));
+  apply(() => sheet.setRowHeight(1, 48));
+  apply(() => sheet.setFrozenRows(1));
+  apply(() => sheet.setFrozenColumns(2));
+  apply(() => sheet.setTabColor('#4b2e23'));
   const widths = [130, 145, 170, 200, 140, 220, 130, 110, 125, 280, 170, 160, 135, 120, 150, 280];
-  widths.forEach((width, index) => sheet.setColumnWidth(index + 1, width));
-  sheet.getRange('J:P').setWrap(true).setVerticalAlignment('top');
-  sheet.hideColumns(12); // Calendar ID is technical; the system still reads and updates it.
+  widths.forEach((width, index) => apply(() => sheet.setColumnWidth(index + 1, width)));
+  apply(() => sheet.getRange('J:P').setWrap(true).setVerticalAlignment('top'));
+  apply(() => sheet.hideColumns(12)); // Calendar ID is technical; the system still reads and updates it.
   return 'Đã định dạng bảng Yêu cầu và ẩn cột kỹ thuật Calendar.';
 }
 
