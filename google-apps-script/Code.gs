@@ -87,6 +87,7 @@ function sendGuestAcknowledgement_(r) {
  */
 function setupWorkflow() {
   const cleanup = normalizeInquirySheet();
+  const protection = configureInquirySheetProtection();
   const sheetId = getOrCreateRequestSheet_().getParent().getId();
   const calendar = getOrCreateCalendar_();
   const handler = 'handleRequestStatusChange_';
@@ -96,7 +97,7 @@ function setupWorkflow() {
   if (!hasTrigger) {
     ScriptApp.newTrigger(handler).forSpreadsheet(sheetId).onEdit().create();
   }
-  return `${cleanup} Calendar: ${calendar.getName()}. Trigger: ${hasTrigger ? 'đã có' : 'vừa tạo'}.`;
+  return `${cleanup} ${protection} Calendar: ${calendar.getName()}. Trigger: ${hasTrigger ? 'đã có' : 'vừa tạo'}.`;
 }
 
 /**
@@ -126,6 +127,33 @@ function normalizeInquirySheet() {
   sheet.getRange(2, 3, rows, 1).setDataValidation(serviceRule);
   sheet.getRange(2, 11, rows, 1).setDataValidation(statusRule);
   return `Đã xóa ${removed} dòng kiểm tra và chuẩn hóa danh sách chọn tiếng Việt.`;
+}
+
+/**
+ * Khóa dữ liệu khách và thông tin Calendar để nhân viên chỉ cập nhật cột
+ * “Trạng thái”. Chủ sở hữu bảng tính vẫn có thể thay đổi toàn bộ cấu hình.
+ */
+function configureInquirySheetProtection() {
+  const sheet = getOrCreateRequestSheet_();
+  const ownerEmail = Session.getEffectiveUser().getEmail();
+  const marker = 'Mỹ Yến — Khóa dữ liệu khách tự động';
+
+  sheet.getProtections(SpreadsheetApp.ProtectionType.RANGE)
+    .filter(protection => protection.getDescription() === marker)
+    .forEach(protection => protection.remove());
+
+  // A–J contains website-submitted details. L contains the Calendar event ID.
+  // K1 is protected separately so staff can change K2:K without changing its heading.
+  ['A:J', 'L:L', 'K1'].forEach(a1Notation => {
+    const protection = sheet.getRange(a1Notation).protect().setDescription(marker);
+    protection.addEditor(ownerEmail);
+    const otherEditors = protection.getEditors()
+      .filter(editor => editor.getEmail() !== ownerEmail);
+    if (otherEditors.length) protection.removeEditors(otherEditors);
+    if (protection.canDomainEdit()) protection.setDomainEdit(false);
+  });
+
+  return 'Đã khóa dữ liệu khách; nhân viên chỉ sửa cột Trạng thái.';
 }
 
 /**
