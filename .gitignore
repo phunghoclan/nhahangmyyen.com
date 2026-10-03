@@ -3,3 +3,4 @@
 .env.*
 .sites-runtime/
 *.log
+dist/
