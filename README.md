@@ -29,3 +29,6 @@ The public site does not accept orders or reservations through a form. Visitors 
 ## Before future content updates
 
 Confirm every listed menu item, price, event package, capacity, and service detail with the restaurant team. The source menu photos use handwritten price stickers, so fixed prices are intentionally not published yet.
+## Business direction
+
+The current customer, service, and digital-menu direction is maintained in [docs/project-direction.md](docs/project-direction.md). Read it before making website, customer-flow, or marketing changes.
