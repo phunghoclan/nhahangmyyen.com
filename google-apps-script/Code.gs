@@ -102,7 +102,7 @@ function setupWorkflow() {
  * One-time staff cleanup: removes known internal test records and standardizes
  * the Vietnamese dropdowns used by the inquiry team.
  */
-function normalizeInquirySheet_() {
+function normalizeInquirySheet() {
   const sheet = getOrCreateRequestSheet_();
   const testIds = new Set(['TEST-001', 'B7AE6044', 'B47C3DBF', 'FF13BC7A']);
   let removed = 0;
