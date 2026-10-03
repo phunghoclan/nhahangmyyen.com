@@ -86,6 +86,7 @@ function sendGuestAcknowledgement_(r) {
  * Hàm này tạo lịch riêng và cài trình kích hoạt để theo dõi cột Trạng thái.
  */
 function setupWorkflow() {
+  const cleanup = normalizeInquirySheet();
   const sheetId = getOrCreateRequestSheet_().getParent().getId();
   const calendar = getOrCreateCalendar_();
   const handler = 'handleRequestStatusChange_';
@@ -95,7 +96,7 @@ function setupWorkflow() {
   if (!hasTrigger) {
     ScriptApp.newTrigger(handler).forSpreadsheet(sheetId).onEdit().create();
   }
-  return `Đã sẵn sàng. Calendar: ${calendar.getName()}. Trigger: ${hasTrigger ? 'đã có' : 'vừa tạo'}.`;
+  return `${cleanup} Calendar: ${calendar.getName()}. Trigger: ${hasTrigger ? 'đã có' : 'vừa tạo'}.`;
 }
 
 /**
