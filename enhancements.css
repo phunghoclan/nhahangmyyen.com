@@ -233,3 +233,17 @@ footer a {
   .choice-grid, .choice-grid-compact, .helper-date-row { grid-template-columns: 1fr; }
   .group-summary { padding: 1.6rem; }
 }
+
+
+/* Customer FAQ */
+.faq { display:grid; grid-template-columns:minmax(280px,.8fr) minmax(0,1.2fr); gap:clamp(2rem,7vw,8rem); background:#fffdf8; }
+.faq-intro { align-self:start; position:sticky; top:115px; }
+.faq-intro p:not(.eyebrow) { max-width:430px; color:#5c5b53; }
+.faq-list { border-top:1px solid rgba(25,59,50,.28); }
+.faq-list details { border-bottom:1px solid rgba(25,59,50,.28); padding:0; }
+.faq-list summary { display:flex; align-items:center; justify-content:space-between; gap:1rem; padding:1.35rem 0; color:var(--jade); cursor:pointer; font:600 clamp(1.05rem,1.7vw,1.28rem)/1.35 "Playfair Display",serif; list-style:none; }
+.faq-list summary::-webkit-details-marker { display:none; }
+.faq-list summary::after { content:"+"; flex:0 0 auto; color:var(--aged-gold); font:400 1.65rem/1 "Be Vietnam Pro",sans-serif; }
+.faq-list details[open] summary::after { content:"−"; }
+.faq-list details p { max-width:680px; margin:0; padding:0 2.4rem 1.35rem 0; color:#50534d; }
+@media (max-width:900px) { .faq { grid-template-columns:1fr; gap:1.8rem; }.faq-intro { position:static; } }
