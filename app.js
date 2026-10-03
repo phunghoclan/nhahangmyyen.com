@@ -3,6 +3,12 @@ document.querySelectorAll('[data-dish]').forEach(button=>button.addEventListener
 const toggle=document.querySelector('.menu-toggle');const nav=document.querySelector('#nav');
 if(toggle&&nav)toggle.addEventListener('click',()=>{const open=nav.classList.toggle('open');toggle.setAttribute('aria-expanded',open);});
 const form=document.querySelector('#request-form');
+const requestDate=form?.querySelector('[name="date"]');
+if(requestDate){
+  const today=new Date();
+  const localDate=[today.getFullYear(),String(today.getMonth()+1).padStart(2,'0'),String(today.getDate()).padStart(2,'0')].join('-');
+  requestDate.min=localDate;
+}
 document.querySelectorAll('[data-request-type]').forEach(link=>link.addEventListener('click',()=>{
   if(!form)return;
   const select=form.querySelector('[name="type"]');
