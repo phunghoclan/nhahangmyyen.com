@@ -17,10 +17,10 @@ if (toggle && nav) toggle.addEventListener('click', () => {
   toggle.setAttribute('aria-expanded', String(open));
 });
 const paths = {
-  dine: { kicker: 'Dùng bữa tại Mỹ Yến', heading: 'Một bữa ăn để ngồi lại lâu hơn.', copy: 'Chọn chòi sân vườn cho cuộc gặp thân mật, hoặc khám phá những món ăn phù hợp để cả bàn cùng thưởng thức.', primary: 'Chọn không gian', primaryHref: 'spaces.html', secondary: 'Xem thực đơn', secondaryHref: 'menu.html' },
-  event: { kicker: 'Tiệc & sự kiện', heading: 'Một kế hoạch rõ ràng cho ngày quan trọng.', copy: 'Từ sinh nhật, mừng thọ đến liên hoan công ty và lễ cưới, Mỹ Yến hỗ trợ bạn bắt đầu từ số khách, không gian và thực đơn.', primary: 'Tư vấn tiệc qua Zalo', primaryHref: 'https://zalo.me/0948900488', secondary: 'Xem cách chuẩn bị tiệc', secondaryHref: 'events.html' },
-  corporate: { kicker: 'Suất ăn doanh nghiệp', heading: 'Suất ăn hằng ngày, phù hợp với nhịp làm việc của đội ngũ.', copy: 'Tư vấn trực tiếp cho văn phòng, công ty, nhà máy và cơ sở sản xuất theo số lượng, ca làm và nhu cầu thực tế.', primary: 'Nhận tư vấn qua Zalo', primaryHref: 'https://zalo.me/0948900488', secondary: 'Tìm hiểu dịch vụ', secondaryHref: 'corporate-catering.html' },
-  takeaway: { kicker: 'Đặt món mang về', heading: 'Một bàn ăn ngon, ở nơi bạn muốn.', copy: 'Đặt trước cho bữa cơm gia đình, buổi họp mặt hoặc dịp có nhiều người cùng dùng bữa. Mỹ Yến xác nhận trực tiếp về món và thời gian chuẩn bị.', primary: 'Nhắn Zalo đặt món', primaryHref: 'https://zalo.me/0948900488', secondary: 'Xem món phù hợp', secondaryHref: 'takeaway.html' }
+  dine: { kicker: 'Dùng bữa tại Mỹ Yến', heading: 'Một bữa ăn để ngồi lại lâu hơn.', copy: 'Chọn chòi sân vườn cho cuộc gặp thân mật, hoặc khám phá những món ăn phù hợp để cả bàn cùng thưởng thức.', primary: 'Chuẩn bị yêu cầu đặt bàn', primaryHref: 'spaces.html#table-helper', secondary: 'Xem thực đơn', secondaryHref: 'menu.html' },
+  event: { kicker: 'Tiệc & sự kiện', heading: 'Một kế hoạch rõ ràng cho ngày quan trọng.', copy: 'Từ sinh nhật, mừng thọ đến liên hoan công ty và lễ cưới, Mỹ Yến hỗ trợ bạn bắt đầu từ số khách, không gian và thực đơn.', primary: 'Chuẩn bị yêu cầu tiệc', primaryHref: 'events.html#group-helper', secondary: 'Xem cách chuẩn bị tiệc', secondaryHref: 'events.html' },
+  corporate: { kicker: 'Suất ăn doanh nghiệp', heading: 'Suất ăn hằng ngày, phù hợp với nhịp làm việc của đội ngũ.', copy: 'Tư vấn trực tiếp cho văn phòng, công ty, nhà máy và cơ sở sản xuất theo số lượng, ca làm và nhu cầu thực tế.', primary: 'Chuẩn bị yêu cầu', primaryHref: 'corporate-catering.html#corporate-helper', secondary: 'Tìm hiểu dịch vụ', secondaryHref: 'corporate-catering.html' },
+  takeaway: { kicker: 'Đặt món mang về', heading: 'Một bàn ăn ngon, ở nơi bạn muốn.', copy: 'Đặt trước cho bữa cơm gia đình, buổi họp mặt hoặc dịp có nhiều người cùng dùng bữa. Mỹ Yến xác nhận trực tiếp về món và thời gian chuẩn bị.', primary: 'Chuẩn bị yêu cầu đặt món', primaryHref: 'takeaway.html#takeaway-helper', secondary: 'Xem món phù hợp', secondaryHref: 'takeaway.html' }
 };
 const pathPanel = document.querySelector('#path-panel');
 if (pathPanel) document.querySelectorAll('[data-path]').forEach(button => button.addEventListener('click', () => {
@@ -35,6 +35,25 @@ if (pathPanel) document.querySelectorAll('[data-path]').forEach(button => button
   const secondary = document.querySelector('#path-secondary'); secondary.textContent = item.secondary; secondary.href = item.secondaryHref;
 }));
 
+const formatVietnamDate = value => {
+  if (!value) return 'Chưa xác định';
+  const [yearText, monthText, dayText] = value.split('-');
+  const year = Number(yearText);
+  const month = Number(monthText);
+  const day = Number(dayText);
+  if (!year || !month || !day) return value;
+  const formatted = String(day).padStart(2, '0') + '/' + String(month).padStart(2, '0') + '/' + year;
+  const parts = new Intl.DateTimeFormat('en-US', {
+    timeZone: 'Asia/Ho_Chi_Minh', year: 'numeric', month: '2-digit', day: '2-digit'
+  }).formatToParts(new Date());
+  const today = Object.fromEntries(parts.filter(part => part.type !== 'literal').map(part => [part.type, Number(part.value)]));
+  const offset = Math.round((Date.UTC(year, month - 1, day) - Date.UTC(today.year, today.month - 1, today.day)) / 86400000);
+  if (offset === 0) return 'Hôm nay (' + formatted + ')';
+  if (offset === 1) return 'Ngày mai (' + formatted + ')';
+  if (offset === 2) return 'Ngày mốt (' + formatted + ')';
+  return formatted;
+};
+
 const groupHelper = document.querySelector('#group-helper');
 if (groupHelper) {
   const choices = { occasion: '', guests: '', space: '' };
@@ -44,17 +63,13 @@ if (groupHelper) {
   const dateInput = document.querySelector('#group-date');
   const timeInput = document.querySelector('#group-time');
 
-  const formatDate = value => {
-    if (!value) return 'Chưa xác định';
-    const [year, month, day] = value.split('-');
-    return day && month && year ? day + '/' + month + '/' + year : value;
-  };
+  const formatDate = value => formatVietnamDate(value);
 
   const requestMessage = () => 'Chào Nhà Hàng Mỹ Yến, tôi muốn tư vấn tiệc.\n\n'
     + '- Dịp: ' + (choices.occasion || 'Chưa xác định') + '\n'
     + '- Số khách: ' + (choices.guests || 'Chưa xác định') + '\n'
     + '- Ngày dự kiến: ' + formatDate(dateInput.value) + '\n'
-    + '- Buổi: ' + (timeInput.value || 'Chưa xác định') + '\n'
+    + '- Giờ dự kiến: ' + (timeInput.value || 'Chưa xác định') + '\n'
     + '- Không gian: ' + (choices.space || 'Chưa xác định') + '\n\n'
     + 'Xin Mỹ Yến tư vấn giúp tôi. Cảm ơn.';
 
@@ -100,3 +115,75 @@ if (groupHelper) {
     status.textContent = 'Đã sao chép. Bây giờ mở Zalo và dán nội dung để Mỹ Yến tư vấn.';
   });
 }
+
+const formatRequestDate = value => formatVietnamDate(value);
+
+const copyRequestText = async text => {
+  try {
+    await navigator.clipboard.writeText(text);
+  } catch {
+    const fallback = document.createElement('textarea');
+    fallback.value = text;
+    fallback.style.position = 'fixed';
+    fallback.style.opacity = '0';
+    document.body.appendChild(fallback);
+    fallback.select();
+    document.execCommand('copy');
+    fallback.remove();
+  }
+};
+
+document.querySelectorAll('[data-request-helper]').forEach(helper => {
+  const selections = {};
+  const groups = [...helper.querySelectorAll('[data-request-group]')];
+  const inputs = [...helper.querySelectorAll('[data-request-input]')];
+  const summary = helper.querySelector('.request-summary-text');
+  const copyButton = helper.querySelector('.copy-request');
+  const status = helper.querySelector('.request-copy-status');
+  const defaultSummary = summary.textContent;
+
+  const selectedLines = () => {
+    const lines = groups.filter(group => selections[group.dataset.requestGroup]).map(group => ({
+      label: group.dataset.label,
+      value: selections[group.dataset.requestGroup]
+    }));
+    inputs.forEach(input => lines.push({
+      label: input.dataset.label,
+      value: input.value ? (input.type === 'date' ? formatRequestDate(input.value) : input.value) : 'Chưa xác định'
+    }));
+    return lines;
+  };
+
+  const update = () => {
+    const ready = groups.filter(group => group.dataset.required === 'true').every(group => selections[group.dataset.requestGroup]);
+    copyButton.disabled = !ready;
+    const lines = selectedLines();
+    summary.textContent = ready ? lines.map(line => line.value).join(' · ') + '.' : defaultSummary;
+  };
+
+  groups.forEach(group => group.querySelectorAll('button').forEach(button => button.addEventListener('click', () => {
+    selections[group.dataset.requestGroup] = button.dataset.value;
+    group.querySelectorAll('button').forEach(choice => {
+      const selected = choice === button;
+      choice.classList.toggle('is-selected', selected);
+      choice.setAttribute('aria-pressed', String(selected));
+    });
+    copyButton.textContent = 'Sao chép yêu cầu';
+    status.textContent = 'Sau khi sao chép, mở Zalo và dán nội dung vào cuộc trò chuyện với Mỹ Yến.';
+    update();
+  })));
+
+  inputs.forEach(input => input.addEventListener('change', () => {
+    copyButton.textContent = 'Sao chép yêu cầu';
+    update();
+  }));
+
+  copyButton.addEventListener('click', async () => {
+    const message = 'Chào Nhà Hàng Mỹ Yến, tôi muốn ' + helper.dataset.requestType + '.\n\n'
+      + selectedLines().map(line => '- ' + line.label + ': ' + line.value).join('\n')
+      + '\n\nXin Mỹ Yến tư vấn giúp tôi. Cảm ơn.';
+    await copyRequestText(message);
+    copyButton.textContent = 'Đã sao chép yêu cầu';
+    status.textContent = 'Đã sao chép. Bây giờ mở Zalo và dán nội dung để Mỹ Yến tư vấn.';
+  });
+});
