@@ -246,4 +246,5 @@ footer a {
 .faq-list summary::after { content:"+"; flex:0 0 auto; color:var(--aged-gold); font:400 1.65rem/1 "Be Vietnam Pro",sans-serif; }
 .faq-list details[open] summary::after { content:"−"; }
 .faq-list details p { max-width:680px; margin:0; padding:0 2.4rem 1.35rem 0; color:#50534d; }
+.faq-list details p a { color:#71571a; font-weight:700; text-decoration-thickness:1px; text-underline-offset:4px; white-space:nowrap; }
 @media (max-width:900px) { .faq { grid-template-columns:1fr; gap:1.8rem; }.faq-intro { position:static; } }
