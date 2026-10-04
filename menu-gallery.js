@@ -17,24 +17,32 @@ const menuImages = {
     ['Trà, cà phê & nước giải khát', 'd74a8b9bcea1db2a4e4621a0f0392a32'], ['Nước ép, sinh tố & bia', 'b3d4dab34d44c0da15a8cea2acf7a801']
   ],
   dimsum: [
-    ['Dim Sum & bánh bao', 'character-buns'], ['Mì & hủ tiếu', 'egg-tarts'], ['Thức uống', 'character-buns']
+    ['Dim Sum — há cảo, xíu mại & bánh xếp', '6e03c6d1e53a7286eee101bcec8d7aa4'],
+    ['Dim Sum — bánh cuốn & món chiên', '274ec11cf2a10a526fd8e636d8f79d78'],
+    ['Dim Sum — bánh bao & món điểm tâm', 'd09b06ccdb1e7a55c5c15dd36e4de49b'],
+    ['Dim Sum — xôi, bánh cuốn & món chiên', '7355170fd21823fac0ea3064680c7ce3'],
+    ['Dim Sum — món nóng', '120d99a85604979ad47a5a1a0296e535'],
+    ['Dim Sum — món hấp', '68ba80cce2d36a6b25b4eeb7b318dbb8'],
+    ['Mì & hủ tiếu', '3dfbf53181d25c356368402a1a06c40e'],
+    ['Mì & hủ tiếu', 'cac4949d731678984c3ad01341505008'],
+    ['Mì & hủ tiếu đặc biệt', '25ba8d4d840b084c21ef3cde9cdffeaf'],
+    ['Mì đặc biệt', 'f9a381c5675923104be85a856bf13a71'],
+    ['Trà & cà phê', 'c4b30c403bac146f82f654ea86930ed1'],
+    ['Nước giải khát & bia', 'c6b46d4cc0307772c8c30c00c824ed56'],
+    ['Nước ép & sinh tố', 'e91a367e918d53235a2088fe30a7d1bc']
   ]
 };
 
 const gallery = document.querySelector('#menu-gallery');
 const tabs = [...document.querySelectorAll('[data-menu-tab]')];
 const tabCopy = document.querySelector('#menu-gallery-copy');
-const imagePath = (type, image) => type === 'dimsum' ? `assets/${image}.jpg` : `assets/menu/${type}/${image}.JPEG`;
+const imagePath = (type, image) => `assets/menu/${type}/${image}.JPEG`;
 
 const renderGallery = type => {
   if (!gallery) return;
-  if (type === 'dimsum') {
-    gallery.innerHTML = '<div class="menu-photo-note"><p class="eyebrow">Đang hoàn thiện</p><h3>Ảnh món Dim Sum sẽ được cập nhật cùng thực đơn số.</h3><p>Để thông tin rõ ràng, Mỹ Yến chưa dùng ảnh minh họa thay cho ảnh trong thực đơn Dim Sum. Bạn có thể nhắn Zalo để hỏi món, giá và tình trạng phục vụ.</p><a class="button" href="https://zalo.me/0948900488" target="_blank" rel="noopener">Nhắn Zalo hỏi Dim Sum</a></div>';
-  } else {
   gallery.innerHTML = menuImages[type].map(([title, image]) => `<figure class="menu-page-card"><img loading="lazy" src="${imagePath(type, image)}" alt="Trang thực đơn ${title} của Nhà Hàng Mỹ Yến"><figcaption>${title}</figcaption></figure>`).join('');
-  }
   tabs.forEach(tab => { const selected = tab.dataset.menuTab === type; tab.classList.toggle('is-selected', selected); tab.setAttribute('aria-pressed', String(selected)); });
-  if (tabCopy) tabCopy.textContent = type === 'regular' ? 'Thực đơn gọi món gồm các món dùng chung, hải sản theo mùa và món đặt trước. Giá hải sản thời giá sẽ được Mỹ Yến xác nhận trực tiếp.' : 'Danh mục Dim Sum, mì & thức uống đang được hoàn thiện với ảnh món thật. Trong lúc này, bạn có thể xem danh sách món và giá trong thực đơn gốc hoặc nhắn Mỹ Yến để kiểm tra món.';
+  if (tabCopy) tabCopy.textContent = type === 'regular' ? 'Thực đơn gọi món gồm các món dùng chung, hải sản theo mùa và món đặt trước. Giá hải sản thời giá sẽ được Mỹ Yến xác nhận trực tiếp.' : 'Khám phá Dim Sum, mì & hủ tiếu, trà, cà phê, nước ép và thức uống. Hình ảnh chỉ mang tính minh họa; Mỹ Yến sẽ kiểm tra tình trạng món trước khi xác nhận.';
 };
 
 tabs.forEach(tab => tab.addEventListener('click', () => renderGallery(tab.dataset.menuTab)));
