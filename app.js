@@ -12,10 +12,27 @@ document.querySelectorAll('[data-dish]').forEach(button => button.addEventListen
 }));
 const toggle = document.querySelector('.menu-toggle');
 const nav = document.querySelector('#nav');
-if (toggle && nav) toggle.addEventListener('click', () => {
-  const open = nav.classList.toggle('open');
-  toggle.setAttribute('aria-expanded', String(open));
-});
+if (toggle && nav) {
+  const closeNavigation = () => {
+    nav.classList.remove('open');
+    toggle.setAttribute('aria-expanded', 'false');
+  };
+  toggle.addEventListener('click', () => {
+    const open = nav.classList.toggle('open');
+    toggle.setAttribute('aria-expanded', String(open));
+  });
+  document.addEventListener('click', event => {
+    if (!nav.classList.contains('open') || nav.contains(event.target) || toggle.contains(event.target)) return;
+    closeNavigation();
+  });
+  nav.querySelectorAll('a').forEach(link => link.addEventListener('click', closeNavigation));
+  document.addEventListener('focusin', event => {
+    if (nav.classList.contains('open') && !nav.contains(event.target) && !toggle.contains(event.target)) closeNavigation();
+  });
+  document.addEventListener('keydown', event => {
+    if (event.key === 'Escape') closeNavigation();
+  });
+}
 
 // Give the mobile contact action a useful destination on every page.
 const mobileContact = document.querySelector('.mobile-actions a:last-child[href="#contact"]');
