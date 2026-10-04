@@ -115,20 +115,34 @@ if (groupHelper) {
   if (requestedMenu && [...menuInput.options].some(option => option.value === requestedMenu)) menuInput.value = requestedMenu;
   const requestMessage = () => {
     const selectedServices = services.filter(input => input.checked).map(input => input.value);
+    const lines = [
+      choices.occasion && '- Dịp: ' + choices.occasion,
+      choices.guests && '- Số khách dự kiến: ' + choices.guests,
+      dateInput.value && '- Ngày dự kiến: ' + formatVietnamDate(dateInput.value),
+      timeInput.value && '- Giờ dự kiến: ' + timeInput.value,
+      choices.space && '- Không gian: ' + choices.space,
+      menuInput.value && '- Thực đơn: Set ' + menuInput.value + ' (tài liệu tiệc 2026, 10 khách/bàn)',
+      selectedServices.length && '- Cần tư vấn thêm: ' + selectedServices.join(', '),
+      notesInput.value.trim() && '- Yêu cầu thêm: ' + notesInput.value.trim()
+    ].filter(Boolean);
     return 'Chào Mỹ Yến, mình muốn được tư vấn tiệc.\n\n'
-      + '- Dịp: ' + (choices.occasion || 'Chưa xác định') + '\n'
-      + '- Số khách dự kiến: ' + (choices.guests || 'Chưa xác định') + '\n'
-      + '- Ngày dự kiến: ' + formatVietnamDate(dateInput.value) + '\n'
-      + '- Giờ dự kiến: ' + (timeInput.value || 'Chưa xác định') + '\n'
-      + '- Không gian: ' + (choices.space || 'Nhờ Mỹ Yến tư vấn') + '\n'
-      + '- Thực đơn: ' + (menuInput.value ? 'Set ' + menuInput.value + ' (tài liệu tiệc 2026, 10 khách/bàn)' : 'Nhờ Mỹ Yến gợi ý') + '\n'
-      + (selectedServices.length ? '- Cần tư vấn thêm: ' + selectedServices.join(', ') + '\n' : '')
-      + (notesInput.value.trim() ? '- Yêu cầu thêm: ' + notesInput.value.trim() + '\n' : '')
-      + '\nNhờ Mỹ Yến kiểm tra chỗ, tư vấn thực đơn và báo giá gồm thuế, thức uống, dịch vụ giúp mình. Cảm ơn!';
+      + lines.join('\n')
+      + '\n\nNhờ Mỹ Yến kiểm tra chỗ, tư vấn thực đơn và báo giá gồm thuế, thức uống, dịch vụ giúp mình. Cảm ơn!';
+  };
+  const previewSummary = () => {
+    if (!choices.occasion && !choices.guests) return 'Hãy chọn dịp và số khách trước. Bạn có thể bổ sung ngày, không gian và thực đơn sau.';
+    const parts = [];
+    if (choices.occasion) parts.push(choices.occasion);
+    if (choices.guests) parts.push(choices.guests);
+    if (dateInput.value) parts.push(formatVietnamDate(dateInput.value));
+    if (timeInput.value) parts.push(timeInput.value);
+    if (choices.space) parts.push(choices.space);
+    if (menuInput.value) parts.push('Thực đơn ' + menuInput.value);
+    return parts.join(' · ') + '.';
   };
   const updateSummary = () => {
     copyButton.disabled = !(choices.occasion && choices.guests);
-    summary.textContent = requestMessage();
+    summary.textContent = previewSummary();
     copyButton.textContent = 'Sao chép yêu cầu';
     status.textContent = copyButton.disabled ? 'Chọn dịp và số khách để sao chép. Những thông tin khác có thể bổ sung sau.' : 'Sao chép, mở Zalo và dán nội dung để gửi cho Mỹ Yến.';
     groupHelper.querySelectorAll('[data-group] button').forEach(button => {
