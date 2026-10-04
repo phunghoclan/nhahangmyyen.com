@@ -262,6 +262,7 @@ footer a {
 .banquet-filters { display: flex; flex-wrap: wrap; gap: .6rem; margin: 1.8rem 0; }
 .banquet-filters button { padding: .8rem 1rem; min-height: 48px; border: 1px solid #687b6e; background: transparent; color: var(--jade); font: 600 .88rem "Be Vietnam Pro",sans-serif; cursor: pointer; }
 .banquet-filters button[aria-pressed="true"] { background: var(--jade); color: var(--ivory); }
+.banquet-selection-note { margin: 1.25rem 0 .45rem; color: var(--jade); font-weight: 600; }
 .banquet-grid { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: 1rem; align-items: start; }
 .banquet-card { padding: clamp(1.3rem,3vw,2rem); background: #fffdf8; border: 1px solid #d1d3c8; }
 .banquet-card h3 { font: 600 1.4rem/1.5 "Be Vietnam Pro",sans-serif; }

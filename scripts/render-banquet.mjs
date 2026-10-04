@@ -6,10 +6,12 @@ if (new Set(menus.map(menu => menu.code)).size !== menus.length) throw new Error
 for (const menu of menus) {
   if (!/^[1-6][A-H]$/.test(menu.code) || menu.tier !== Number(menu.code[0]) || !Number.isInteger(menu.price) || menu.price <= 0 || !menu.dishes.length) throw new Error('Invalid menu: ' + menu.code);
 }
-const cards = menus.map(menu => `<article class="banquet-card" data-tier="${menu.tier}"><p class="eyebrow">10 khách / bàn</p><h3>Thực đơn ${menu.code}</h3><p class="banquet-price">${price(menu.price)}<small>Giá tham khảo / bàn</small></p><details><summary>Xem ${menu.dishes.length} phần trong thực đơn</summary><ol>${menu.dishes.map(dish => `<li>${escape(dish)}</li>`).join('')}</ol></details><a class="button button-outline" href="events.html?menu=${menu.code}#group-helper">Quan tâm thực đơn ${menu.code}</a></article>`).join('\n');
+const cards = menus.map(menu => `<article class="banquet-card" data-tier="${menu.tier}"><p class="eyebrow">10 khách / bàn</p><h3>Thực đơn ${menu.code}</h3><p class="banquet-price">${price(menu.price)}<small>Giá tham khảo / bàn</small></p><details><summary>Xem ${menu.dishes.length} phần trong thực đơn</summary><ol>${menu.dishes.map(dish => `<li>${escape(dish)}</li>`).join('')}</ol></details><a class="button button-outline" href="events.html?menu=${menu.code}#group-helper">Chọn thực đơn ${menu.code}</a></article>`).join('\n');
 const options = '<option value="">Nhờ Mỹ Yến gợi ý</option>' + menus.map(menu => `<option value="${menu.code}">Thực đơn ${menu.code} · ${price(menu.price)} / bàn (tham khảo)</option>`).join('');
 const filters = '<button type="button" data-tier-filter="all" aria-pressed="true">Tất cả mức giá</button>' + [...new Map(menus.map(menu => [menu.tier,menu.price])).entries()].map(([tier,value]) => `<button type="button" data-tier-filter="${tier}" aria-pressed="false">${price(value)}</button>`).join('');
-const page = fs.readFileSync('banquet-menu.html','utf8').replace(/(<div class="banquet-grid">)[\s\S]*?(<\/div><button class="button button-outline banquet-more")/,(_,start,end) => start + cards + end);
+const page = fs.readFileSync('banquet-menu.html','utf8')
+  .replace(/(?:<p class="banquet-selection-note">[\s\S]*?<\/p>)?<p id="banquet-results" role="status">[\s\S]*?<\/p>/, '<p class="banquet-selection-note">Chọn thực đơn để đưa vào yêu cầu tư vấn của bạn.</p><p id="banquet-results" role="status">34 thực đơn để bạn tham khảo.</p>')
+  .replace(/(<div class="banquet-grid">)[\s\S]*?(<\/div><button class="button button-outline banquet-more")/,(_,start,end) => start + cards + end);
 const filteredPage = page.replace(/(<div class="banquet-filters"[^>]*>)[\s\S]*?(<\/div>)/,(_,start,end) => start + filters + end);
 const events = fs.readFileSync('events.html','utf8').replace(/(<select id="group-menu">)[\s\S]*?(<\/select>)/,(_,start,end) => start + options + end);
 fs.writeFileSync('banquet-menu.html',filteredPage);
