@@ -37,6 +37,13 @@ const gallery = document.querySelector('#menu-gallery');
 const tabs = [...document.querySelectorAll('[data-menu-tab]')];
 const tabCopy = document.querySelector('#menu-gallery-copy');
 const imagePath = (type, image) => `assets/menu/${type}/${image}.JPEG`;
+const categoryTargets = {
+  seafood: 'Hải sản',
+  roast: 'Vịt quay',
+  poultry: 'Món quay & gia cầm',
+  soup: 'Canh tiềm',
+  noodles: 'Cơm chiên & mì xào'
+};
 
 const renderGallery = type => {
   if (!gallery) return;
@@ -46,4 +53,13 @@ const renderGallery = type => {
 };
 
 tabs.forEach(tab => tab.addEventListener('click', () => renderGallery(tab.dataset.menuTab)));
-if (gallery) renderGallery('regular');
+if (gallery) {
+  renderGallery('regular');
+  const category = new URLSearchParams(window.location.search).get('category');
+  const target = categoryTargets[category];
+  if (target) {
+    const card = [...gallery.querySelectorAll('.menu-page-card')].find(item => item.querySelector('figcaption').textContent.includes(target));
+    card?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    card?.classList.add('menu-page-card-highlight');
+  }
+}

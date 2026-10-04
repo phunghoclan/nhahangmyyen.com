@@ -171,6 +171,9 @@ footer a {
 .check-list li::before { content:""; position:absolute; left:0; top:.53rem; width:.55rem; height:.55rem; border-radius:50%; background:var(--aged-gold); }
 .service-copy .text-link { color:#f2d98b; }
 .menu-glimpse { background:var(--jade); }
+.menu-categories a { border:1px solid #7f8d82; border-radius:99px; padding:.5rem .8rem; color:inherit; font-size:.9rem; text-decoration:none; }
+.menu-categories a:hover,.menu-categories a:focus-visible { background:rgba(255,255,255,.1); border-color:#f6f2e6; }
+.menu-page-card-highlight { outline:3px solid var(--gold); outline-offset:4px; }
 .contact-landing { display:grid; grid-template-columns:1fr auto; align-items:center; gap:3rem; background:#e6dac3; }
 .contact-landing h2 { font-size:clamp(2.8rem,5vw,5.2rem); }
 .contact-landing p { max-width:620px; }
