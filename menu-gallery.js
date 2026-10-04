@@ -33,6 +33,134 @@ const menuImages = {
   ]
 };
 
+const digitalMenuItems = [
+  ['Bánh xếp Triều Châu', 53000, 'dimsum'],
+  ['Bó xôi cảo sò điệp', 58000, 'dimsum'],
+  ['Mỹ Yến há cảo', 58000, 'dimsum'],
+  ['Xíu mại thịt cua', 58000, 'dimsum'],
+  ['Chân gà hấp tàu xì', 48000, 'dimsum'],
+  ['Sườn non tàu xì', 58000, 'dimsum'],
+  ['Bánh củ cải chiên', 53000, 'dimsum'],
+  ['Bánh cuốn chay La Hán', 53000, 'dimsum'],
+  ['Bánh cuốn tôm', 58000, 'dimsum'],
+  ['Bánh cuốn xá xíu', 53000, 'dimsum'],
+  ['Xôi gà lá sen', 53000, 'dimsum'],
+  ['Bánh cuốn sườn X.O', 65000, 'dimsum'],
+  ['Xôi gà chiên trứng', 63000, 'dimsum'],
+  ['Bánh cuốn chiên X.O', 48000, 'dimsum'],
+  ['Bánh hẹ chiên Triều Châu', 53000, 'dimsum'],
+  ['Bánh củ cải chiên X.O', 53000, 'dimsum'],
+  ['Bánh bao nấm', 48000, 'dimsum'],
+  ['Bánh bao xá xíu', 48000, 'dimsum'],
+  ['Bánh bao kim sa', 53000, 'dimsum'],
+  ['Bánh bao Thượng Hải', 53000, 'dimsum'],
+  ['Cảo giấm cay Tứ Xuyên', 60000, 'dimsum'],
+  ['Đậu hũ ky dầu hào', 53000, 'dimsum'],
+  ['Đậu hũ ky tôm chiên', 58000, 'dimsum'],
+  ['Tôm chiên cuộn phô mai', 58000, 'dimsum'],
+  ['Hoành thánh tôm chiên', 58000, 'dimsum'],
+  ['Khoai môn chiên xù', 53000, 'dimsum'],
+  ['Mayonnaise hải sản', 58000, 'dimsum'],
+  ['Bánh trứng nướng Hồng Kông', 58000, 'dimsum'],
+  ['Hủ tiếu / mì bò kho', 70000, 'noodles'],
+  ['Hủ tiếu / mì sườn kho', 70000, 'noodles'],
+  ['Hủ tiếu / mì hải sản', 70000, 'noodles'],
+  ['Hủ tiếu / mì tôm cật', 70000, 'noodles'],
+  ['Mì xá xíu trộn dầu hào', 70000, 'noodles'],
+  ['Hủ tiếu / mì cá viên đậu hũ', 70000, 'noodles'],
+  ['Hủ tiếu / mì sủi cảo', 70000, 'noodles'],
+  ['Mì trộn đặc sắc Mỹ Yến', 75000, 'noodles'],
+  ['Hủ tiếu / mì hoành thánh', 70000, 'noodles'],
+  ['Hủ tiếu / mì thập cẩm', 70000, 'noodles'],
+  ['Mì vịt tiềm', 108000, 'noodles'],
+  ['Hủ tiếu / mì tôm', 70000, 'noodles'],
+  ['Mì bào ngư vi cá hải sâm', 380000, 'noodles'],
+  ['Cà phê đá', 25000, 'drinks'],
+  ['Cà phê sữa đá', 30000, 'drinks'],
+  ['Trà Lipton chanh', 20000, 'drinks'],
+  ['Trà Lipton sữa', 25000, 'drinks'],
+  ['Cacao sữa đá', 30000, 'drinks'],
+  ['Đá chanh', 20000, 'drinks'],
+  ['Sữa tươi', 20000, 'drinks'],
+  ['Dừa tươi', 20000, 'drinks'],
+  ['Nước ép trái cây', 35000, 'drinks'],
+  ['Sinh tố', 35000, 'drinks'],
+  ['Pepsi / 7Up / Soda', 18000, 'drinks'],
+  ['Nước suối', 12000, 'drinks']
+].map(([name, price, category], index) => ({ id: `dish-${index + 1}`, name, price, category }));
+
+const shortlistKey = 'myyen-menu-shortlist-v1';
+const categoryNames = { dimsum: 'Dim Sum', noodles: 'Mì & hủ tiếu', drinks: 'Thức uống' };
+const formatPrice = value => new Intl.NumberFormat('vi-VN').format(value) + 'đ';
+const normalizeText = value => value.normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/đ/g, 'd').toLowerCase();
+
+const dishGrid = document.querySelector('#dish-grid');
+if (dishGrid) {
+  const searchInput = document.querySelector('#dish-search');
+  const filterButtons = [...document.querySelectorAll('[data-dish-filter]')];
+  const results = document.querySelector('#dish-results');
+  const count = document.querySelector('#dish-count');
+  const shortlistItems = document.querySelector('#dish-shortlist-items');
+  const shortlistEmpty = document.querySelector('.dish-shortlist-empty');
+  const clearButton = document.querySelector('#dish-clear');
+  let activeFilter = 'all';
+  let selected = [];
+  try {
+    const saved = JSON.parse(localStorage.getItem(shortlistKey) || '[]');
+    if (Array.isArray(saved)) selected = saved.filter(id => digitalMenuItems.some(item => item.id === id));
+  } catch { selected = []; }
+
+  const saveShortlist = () => {
+    localStorage.setItem(shortlistKey, JSON.stringify(selected));
+    const names = selected.map(id => digitalMenuItems.find(item => item.id === id)?.name).filter(Boolean);
+    localStorage.setItem('myyen-menu-shortlist-names-v1', JSON.stringify(names));
+  };
+  const renderShortlist = () => {
+    const selectedItems = selected.map(id => digitalMenuItems.find(item => item.id === id)).filter(Boolean);
+    count.textContent = selectedItems.length;
+    shortlistItems.innerHTML = selectedItems.map(item => `<li><span>${item.name}<small>${formatPrice(item.price)}</small></span><button type="button" data-remove-dish="${item.id}" aria-label="Bỏ ${item.name}">Bỏ</button></li>`).join('');
+    shortlistEmpty.hidden = selectedItems.length > 0;
+    clearButton.hidden = selectedItems.length === 0;
+    shortlistItems.querySelectorAll('[data-remove-dish]').forEach(button => button.addEventListener('click', () => {
+      selected = selected.filter(id => id !== button.dataset.removeDish);
+      saveShortlist();
+      renderDishes();
+      renderShortlist();
+    }));
+  };
+  const renderDishes = () => {
+    const query = normalizeText(searchInput.value.trim());
+    const matching = digitalMenuItems.filter(item => (activeFilter === 'all' || item.category === activeFilter) && (!query || normalizeText(item.name).includes(query)));
+    results.textContent = `${matching.length} món phù hợp.`;
+    dishGrid.innerHTML = matching.map(item => {
+      const isSelected = selected.includes(item.id);
+      return `<article class="dish-item"><p class="eyebrow">${categoryNames[item.category]}</p><h3>${item.name}</h3><p class="dish-item-price">${formatPrice(item.price)} <small>tham khảo</small></p><button type="button" data-add-dish="${item.id}" aria-pressed="${isSelected}">${isSelected ? 'Đã thêm' : 'Thêm vào yêu cầu'}</button></article>`;
+    }).join('');
+    dishGrid.querySelectorAll('[data-add-dish]').forEach(button => button.addEventListener('click', () => {
+      const id = button.dataset.addDish;
+      selected = selected.includes(id) ? selected.filter(value => value !== id) : [...selected, id];
+      saveShortlist();
+      renderDishes();
+      renderShortlist();
+    }));
+  };
+  filterButtons.forEach(button => button.addEventListener('click', () => {
+    activeFilter = button.dataset.dishFilter;
+    filterButtons.forEach(item => item.setAttribute('aria-pressed', String(item === button)));
+    renderDishes();
+  }));
+  searchInput.addEventListener('input', renderDishes);
+  clearButton.addEventListener('click', () => {
+    selected = [];
+    saveShortlist();
+    renderDishes();
+    renderShortlist();
+  });
+  saveShortlist();
+  renderDishes();
+  renderShortlist();
+}
+
 const gallery = document.querySelector('#menu-gallery');
 const tabs = [...document.querySelectorAll('[data-menu-tab]')];
 const tabCopy = document.querySelector('#menu-gallery-copy');

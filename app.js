@@ -200,6 +200,22 @@ document.querySelectorAll('[data-request-helper]').forEach(helper => {
   const copyButton = helper.querySelector('.copy-request');
   const status = helper.querySelector('.request-copy-status');
   const defaultSummary = summary.textContent;
+  const takeawayDishes = helper.querySelector('#takeaway-dishes');
+
+  const syncMenuShortlist = () => {
+    if (!takeawayDishes) return;
+    let names = [];
+    try {
+      const saved = JSON.parse(localStorage.getItem('myyen-menu-shortlist-names-v1') || '[]');
+      if (Array.isArray(saved)) names = saved.filter(name => typeof name === 'string');
+    } catch { names = []; }
+    const previous = takeawayDishes.dataset.shortlistValue || '';
+    if (takeawayDishes.value.trim() && takeawayDishes.value !== previous) return;
+    const next = names.join(', ');
+    takeawayDishes.value = next;
+    takeawayDishes.dataset.shortlistValue = next;
+    if (next) takeawayDishes.dispatchEvent(new Event('input', { bubbles: true }));
+  };
 
   const inputLines = subset => subset.filter(input => input.value || !input.hasAttribute('data-optional')).map(input => ({
     label: input.dataset.label,
@@ -246,6 +262,14 @@ document.querySelectorAll('[data-request-helper]').forEach(helper => {
     input.addEventListener('change', updateFromInput);
     input.addEventListener('input', updateFromInput);
   });
+
+  if (takeawayDishes) {
+    syncMenuShortlist();
+    window.addEventListener('focus', syncMenuShortlist);
+    window.addEventListener('storage', event => {
+      if (event.key === 'myyen-menu-shortlist-names-v1') syncMenuShortlist();
+    });
+  }
 
   const requestMessage = () => 'Chào Nhà Hàng Mỹ Yến, tôi muốn ' + helper.dataset.requestType + '.\n\n'
       + selectedLines().map(line => '- ' + line.label + ': ' + line.value).join('\n')
