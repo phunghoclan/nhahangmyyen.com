@@ -201,6 +201,9 @@ document.querySelectorAll('[data-request-helper]').forEach(helper => {
   const status = helper.querySelector('.request-copy-status');
   const defaultSummary = summary.textContent;
   const takeawayDishes = helper.querySelector('#takeaway-dishes');
+  const takeawayMenuInterest = helper.querySelector('#takeaway-menu-interest');
+  const takeawayDishesStep = helper.querySelector('#takeaway-dishes-step');
+  const takeawayTimeStep = helper.querySelector('#takeaway-time-step');
 
   const syncMenuShortlist = () => {
     if (!takeawayDishes) return;
@@ -233,6 +236,14 @@ document.querySelectorAll('[data-request-helper]').forEach(helper => {
   };
 
   const update = () => {
+    if (takeawayDishes && takeawayMenuInterest) {
+      const hasNamedDishes = Boolean(takeawayDishes.value.trim());
+      takeawayMenuInterest.hidden = hasNamedDishes;
+      takeawayMenuInterest.dataset.required = String(!hasNamedDishes);
+      if (hasNamedDishes) delete selections.menu;
+      takeawayDishesStep.textContent = hasNamedDishes ? '03' : '04';
+      takeawayTimeStep.textContent = hasNamedDishes ? '04' : '05';
+    }
     const groupsReady = groups.filter(group => group.dataset.required === 'true').every(group => selections[group.dataset.requestGroup]);
     const inputsReady = inputs.filter(input => input.hasAttribute('data-required')).every(input => input.value.trim());
     const ready = groupsReady && inputsReady;

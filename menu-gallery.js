@@ -103,7 +103,12 @@ if (dishGrid) {
   const shortlistItems = document.querySelector('#dish-shortlist-items');
   const shortlistEmpty = document.querySelector('.dish-shortlist-empty');
   const clearButton = document.querySelector('#dish-clear');
-  let activeFilter = 'all';
+  const moreButton = document.querySelector('#dish-more');
+  const dock = document.querySelector('#dish-selection-dock');
+  const dockCount = document.querySelector('#dish-dock-count');
+  const pageSize = 6;
+  let visibleLimit = pageSize;
+  let activeFilter = 'dimsum';
   let selected = [];
   try {
     const saved = JSON.parse(localStorage.getItem(shortlistKey) || '[]');
@@ -118,6 +123,8 @@ if (dishGrid) {
   const renderShortlist = () => {
     const selectedItems = selected.map(id => digitalMenuItems.find(item => item.id === id)).filter(Boolean);
     count.textContent = selectedItems.length;
+    dockCount.textContent = selectedItems.length;
+    dock.hidden = selectedItems.length === 0;
     shortlistItems.innerHTML = selectedItems.map(item => `<li><span>${item.name}<small>${formatPrice(item.price)}</small></span><button type="button" data-remove-dish="${item.id}" aria-label="Bỏ ${item.name}">Bỏ</button></li>`).join('');
     shortlistEmpty.hidden = selectedItems.length > 0;
     clearButton.hidden = selectedItems.length === 0;
@@ -131,8 +138,10 @@ if (dishGrid) {
   const renderDishes = () => {
     const query = normalizeText(searchInput.value.trim());
     const matching = digitalMenuItems.filter(item => (activeFilter === 'all' || item.category === activeFilter) && (!query || normalizeText(item.name).includes(query)));
-    results.textContent = `${matching.length} món phù hợp.`;
-    dishGrid.innerHTML = matching.map(item => {
+    const visible = matching.slice(0, visibleLimit);
+    results.textContent = matching.length > visible.length ? `Đang hiện ${visible.length} / ${matching.length} món.` : `${matching.length} món phù hợp.`;
+    moreButton.hidden = visible.length >= matching.length;
+    dishGrid.innerHTML = visible.map(item => {
       const isSelected = selected.includes(item.id);
       return `<article class="dish-item"><p class="eyebrow">${categoryNames[item.category]}</p><h3>${item.name}</h3><p class="dish-item-price">${formatPrice(item.price)} <small>tham khảo</small></p><button type="button" data-add-dish="${item.id}" aria-pressed="${isSelected}">${isSelected ? 'Đã thêm' : 'Thêm vào yêu cầu'}</button></article>`;
     }).join('');
@@ -146,10 +155,19 @@ if (dishGrid) {
   };
   filterButtons.forEach(button => button.addEventListener('click', () => {
     activeFilter = button.dataset.dishFilter;
+    visibleLimit = pageSize;
+    searchInput.value = '';
     filterButtons.forEach(item => item.setAttribute('aria-pressed', String(item === button)));
     renderDishes();
   }));
-  searchInput.addEventListener('input', renderDishes);
+  searchInput.addEventListener('input', () => {
+    visibleLimit = searchInput.value.trim() ? digitalMenuItems.length : pageSize;
+    renderDishes();
+  });
+  moreButton.addEventListener('click', () => {
+    visibleLimit += pageSize;
+    renderDishes();
+  });
   clearButton.addEventListener('click', () => {
     selected = [];
     saveShortlist();
@@ -162,6 +180,7 @@ if (dishGrid) {
 }
 
 const gallery = document.querySelector('#menu-gallery');
+const galleryDetails = document.querySelector('#menu-catalogue-details');
 const tabs = [...document.querySelectorAll('[data-menu-tab]')];
 const tabCopy = document.querySelector('#menu-gallery-copy');
 const imagePath = (type, image) => `assets/menu/${type}/${image}.JPEG`;
@@ -209,10 +228,24 @@ viewer.querySelector('.menu-viewer-close').addEventListener('click', () => viewe
 viewer.querySelector('.menu-viewer-previous').addEventListener('click', () => { activeMenuIndex -= 1; updateViewer(); });
 viewer.querySelector('.menu-viewer-next').addEventListener('click', () => { activeMenuIndex += 1; updateViewer(); });
 if (gallery) {
-  renderGallery('regular');
+  let galleryRendered = false;
+  const ensureGallery = () => {
+    if (galleryRendered) return;
+    renderGallery('regular');
+    galleryRendered = true;
+  };
+  galleryDetails?.addEventListener('toggle', () => {
+    if (galleryDetails.open) ensureGallery();
+  });
+  document.querySelector('.dish-filters a[href="#menu-catalogue"]')?.addEventListener('click', () => {
+    galleryDetails.open = true;
+    ensureGallery();
+  });
   const category = new URLSearchParams(window.location.search).get('category');
   const target = categoryTargets[category];
   if (target) {
+    galleryDetails.open = true;
+    ensureGallery();
     const card = [...gallery.querySelectorAll('.menu-page-card')].find(item => item.querySelector('figcaption').textContent.includes(target));
     card?.scrollIntoView({ behavior: 'smooth', block: 'center' });
     card?.classList.add('menu-page-card-highlight');
