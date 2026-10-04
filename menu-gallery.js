@@ -90,6 +90,7 @@ const digitalMenuItems = [
 ].map(([name, price, category], index) => ({ id: `dish-${index + 1}`, name, price, category }));
 
 const shortlistKey = 'myyen-menu-shortlist-v1';
+const quantityKey = 'myyen-menu-quantities-v1';
 const categoryNames = { dimsum: 'Dim Sum', noodles: 'Mì & hủ tiếu', drinks: 'Thức uống' };
 const formatPrice = value => new Intl.NumberFormat('vi-VN').format(value) + 'đ';
 const normalizeText = value => value.normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/đ/g, 'd').toLowerCase();
@@ -110,14 +111,24 @@ if (dishGrid) {
   let visibleLimit = pageSize;
   let activeFilter = 'dimsum';
   let selected = [];
+  let quantities = {};
   try {
     const saved = JSON.parse(localStorage.getItem(shortlistKey) || '[]');
     if (Array.isArray(saved)) selected = saved.filter(id => digitalMenuItems.some(item => item.id === id));
   } catch { selected = []; }
+  try {
+    const saved = JSON.parse(localStorage.getItem(quantityKey) || '{}');
+    if (saved && typeof saved === 'object' && !Array.isArray(saved)) quantities = saved;
+  } catch { quantities = {}; }
+  selected.forEach(id => { quantities[id] = Math.max(1, Number(quantities[id]) || 1); });
 
   const saveShortlist = () => {
     localStorage.setItem(shortlistKey, JSON.stringify(selected));
-    const names = selected.map(id => digitalMenuItems.find(item => item.id === id)?.name).filter(Boolean);
+    localStorage.setItem(quantityKey, JSON.stringify(quantities));
+    const names = selected.map(id => {
+      const item = digitalMenuItems.find(candidate => candidate.id === id);
+      return item ? `${item.name} × ${quantities[id] || 1}` : null;
+    }).filter(Boolean);
     localStorage.setItem('myyen-menu-shortlist-names-v1', JSON.stringify(names));
   };
   const renderShortlist = () => {
@@ -125,13 +136,26 @@ if (dishGrid) {
     count.textContent = selectedItems.length;
     dockCount.textContent = selectedItems.length;
     dock.hidden = selectedItems.length === 0;
-    shortlistItems.innerHTML = selectedItems.map(item => `<li><span>${item.name}<small>${formatPrice(item.price)}</small></span><button type="button" data-remove-dish="${item.id}" aria-label="Bỏ ${item.name}">Bỏ</button></li>`).join('');
+    shortlistItems.innerHTML = selectedItems.map(item => `<li><span>${item.name}<small>${formatPrice(item.price)} / phần</small></span><span class="dish-quantity"><button type="button" data-decrease-dish="${item.id}" aria-label="Giảm ${item.name}">−</button><strong aria-label="${quantities[item.id]} phần">${quantities[item.id]}</strong><button type="button" data-increase-dish="${item.id}" aria-label="Tăng ${item.name}">+</button></span><button type="button" data-remove-dish="${item.id}" aria-label="Bỏ ${item.name}">Bỏ</button></li>`).join('');
     shortlistEmpty.hidden = selectedItems.length > 0;
     clearButton.hidden = selectedItems.length === 0;
     shortlistItems.querySelectorAll('[data-remove-dish]').forEach(button => button.addEventListener('click', () => {
       selected = selected.filter(id => id !== button.dataset.removeDish);
+      delete quantities[button.dataset.removeDish];
       saveShortlist();
       renderDishes();
+      renderShortlist();
+    }));
+    shortlistItems.querySelectorAll('[data-decrease-dish]').forEach(button => button.addEventListener('click', () => {
+      const id = button.dataset.decreaseDish;
+      quantities[id] = Math.max(1, (quantities[id] || 1) - 1);
+      saveShortlist();
+      renderShortlist();
+    }));
+    shortlistItems.querySelectorAll('[data-increase-dish]').forEach(button => button.addEventListener('click', () => {
+      const id = button.dataset.increaseDish;
+      quantities[id] = Math.min(99, (quantities[id] || 1) + 1);
+      saveShortlist();
       renderShortlist();
     }));
   };
@@ -147,7 +171,13 @@ if (dishGrid) {
     }).join('');
     dishGrid.querySelectorAll('[data-add-dish]').forEach(button => button.addEventListener('click', () => {
       const id = button.dataset.addDish;
-      selected = selected.includes(id) ? selected.filter(value => value !== id) : [...selected, id];
+      if (selected.includes(id)) {
+        selected = selected.filter(value => value !== id);
+        delete quantities[id];
+      } else {
+        selected = [...selected, id];
+        quantities[id] = 1;
+      }
       saveShortlist();
       renderDishes();
       renderShortlist();
@@ -170,6 +200,7 @@ if (dishGrid) {
   });
   clearButton.addEventListener('click', () => {
     selected = [];
+    quantities = {};
     saveShortlist();
     renderDishes();
     renderShortlist();

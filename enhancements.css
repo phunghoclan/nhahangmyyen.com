@@ -214,10 +214,13 @@ footer a {
 .dish-shortlist .eyebrow { color:#e3bf6a; }
 .dish-shortlist h3 { font:600 1.6rem/1.2 "Playfair Display",serif; }
 .dish-shortlist ul { list-style:none; padding:0; margin:1.2rem 0; max-height:340px; overflow:auto; }
-.dish-shortlist li { display:flex; justify-content:space-between; gap:.7rem; padding:.7rem 0; border-bottom:1px solid rgba(255,255,255,.18); font-size:.82rem; }
+.dish-shortlist li { display:grid; grid-template-columns:minmax(0,1fr) auto auto; align-items:center; gap:.7rem; padding:.7rem 0; border-bottom:1px solid rgba(255,255,255,.18); font-size:.82rem; }
 .dish-shortlist li span { display:block; }
 .dish-shortlist li small { display:block; margin-top:.15rem; color:#d9cda9; }
 .dish-shortlist li button,.dish-shortlist-actions > button { border:0; background:transparent; color:#f2d98b; font:600 .72rem "Be Vietnam Pro",sans-serif; cursor:pointer; }
+.dish-quantity { display:flex!important; align-items:center; gap:.25rem; border:1px solid rgba(255,255,255,.28); }
+.dish-quantity button { width:1.8rem; height:1.8rem; padding:0; font-size:1rem!important; }
+.dish-quantity strong { min-width:1.1rem; text-align:center; font-size:.78rem; }
 .dish-shortlist-empty { color:#d9ded9; font-size:.85rem; }
 .dish-shortlist-actions { display:grid; gap:.7rem; }
 .dish-shortlist-actions .button { text-align:center; }
