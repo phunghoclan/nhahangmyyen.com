@@ -62,58 +62,74 @@ if (groupHelper) {
   const status = document.querySelector('#group-copy-status');
   const dateInput = document.querySelector('#group-date');
   const timeInput = document.querySelector('#group-time');
-
-  const formatDate = value => formatVietnamDate(value);
-
-  const requestMessage = () => 'Chào Nhà Hàng Mỹ Yến, tôi muốn tư vấn tiệc.\n\n'
-    + '- Dịp: ' + (choices.occasion || 'Chưa xác định') + '\n'
-    + '- Số khách: ' + (choices.guests || 'Chưa xác định') + '\n'
-    + '- Ngày dự kiến: ' + formatDate(dateInput.value) + '\n'
-    + '- Giờ dự kiến: ' + (timeInput.value || 'Chưa xác định') + '\n'
-    + '- Không gian: ' + (choices.space || 'Chưa xác định') + '\n\n'
-    + 'Xin Mỹ Yến tư vấn giúp tôi. Cảm ơn.';
-
-  const updateSummary = () => {
-    const ready = choices.occasion && choices.guests && choices.space;
-    copyButton.disabled = !ready;
-    if (!ready) {
-      summary.textContent = 'Chọn dịp, số khách và không gian để tạo bản tóm tắt.';
-      return;
+  const menuInput = document.querySelector('#group-menu');
+  const notesInput = document.querySelector('#group-notes');
+  const services = [...groupHelper.querySelectorAll('[name="event-service"]')];
+  const draftKey = 'myyen-event-draft-v1';
+  // Keep unfinished planning in this tab only; it is never submitted automatically.
+  try {
+    const saved = JSON.parse(sessionStorage.getItem(draftKey) || 'null');
+    if (saved && typeof saved === 'object') {
+      Object.keys(choices).forEach(key => {
+        const allowed = [...groupHelper.querySelectorAll(`[data-group="${key}"] button`)].map(b => b.dataset.value);
+        if (allowed.includes(saved[key])) choices[key] = saved[key];
+      });
+      dateInput.value = typeof saved.date === 'string' ? saved.date : '';
+      timeInput.value = typeof saved.time === 'string' ? saved.time : '';
+      menuInput.value = typeof saved.menu === 'string' ? saved.menu : '';
+      notesInput.value = typeof saved.notes === 'string' ? saved.notes.slice(0, 1000) : '';
+      services.forEach(input => { input.checked = Array.isArray(saved.services) && saved.services.includes(input.value); });
     }
-    summary.textContent = choices.occasion + ' · ' + choices.guests + ' · ' + formatDate(dateInput.value) + ' · ' + (timeInput.value || 'Chưa xác định') + ' · ' + choices.space + '.';
+  } catch { /* Planning also works when browser storage is unavailable. */ }
+  const requestedMenu = new URLSearchParams(location.search).get('menu');
+  if (requestedMenu && [...menuInput.options].some(option => option.value === requestedMenu)) menuInput.value = requestedMenu;
+  const requestMessage = () => {
+    const selectedServices = services.filter(input => input.checked).map(input => input.value);
+    return 'Chào Mỹ Yến, mình muốn được tư vấn tiệc.\n\n'
+      + '- Dịp: ' + (choices.occasion || 'Chưa xác định') + '\n'
+      + '- Số khách dự kiến: ' + (choices.guests || 'Chưa xác định') + '\n'
+      + '- Ngày dự kiến: ' + formatVietnamDate(dateInput.value) + '\n'
+      + '- Giờ dự kiến: ' + (timeInput.value || 'Chưa xác định') + '\n'
+      + '- Không gian: ' + (choices.space || 'Nhờ Mỹ Yến tư vấn') + '\n'
+      + '- Thực đơn: ' + (menuInput.value ? 'Set ' + menuInput.value + ' (tài liệu tiệc 2026, 10 khách/bàn)' : 'Nhờ Mỹ Yến gợi ý') + '\n'
+      + (selectedServices.length ? '- Cần tư vấn thêm: ' + selectedServices.join(', ') + '\n' : '')
+      + (notesInput.value.trim() ? '- Yêu cầu thêm: ' + notesInput.value.trim() + '\n' : '')
+      + '\nNhờ Mỹ Yến kiểm tra chỗ, tư vấn thực đơn và báo giá gồm thuế, thức uống, dịch vụ giúp mình. Cảm ơn!';
   };
-
-  groupHelper.querySelectorAll('[data-group] button').forEach(button => button.addEventListener('click', () => {
-    const group = button.closest('[data-group]');
-    choices[group.dataset.group] = button.dataset.value;
-    group.querySelectorAll('button').forEach(choice => {
-      const selected = choice === button;
-      choice.classList.toggle('is-selected', selected);
-      choice.setAttribute('aria-pressed', String(selected));
+  const updateSummary = () => {
+    copyButton.disabled = !(choices.occasion && choices.guests);
+    summary.textContent = requestMessage();
+    copyButton.textContent = 'Sao chép yêu cầu';
+    status.textContent = copyButton.disabled ? 'Chọn dịp và số khách để sao chép. Những thông tin khác có thể bổ sung sau.' : 'Sao chép, mở Zalo và dán nội dung để gửi cho Mỹ Yến.';
+    groupHelper.querySelectorAll('[data-group] button').forEach(button => {
+      const selected = choices[button.closest('[data-group]').dataset.group] === button.dataset.value;
+      button.classList.toggle('is-selected', selected);
+      button.setAttribute('aria-pressed', String(selected));
     });
-    status.textContent = 'Sau khi sao chép, mở Zalo và dán nội dung vào cuộc trò chuyện với Mỹ Yến.';
+    try {
+      sessionStorage.setItem(draftKey, JSON.stringify({ ...choices, date: dateInput.value, time: timeInput.value, menu: menuInput.value, notes: notesInput.value, services: services.filter(input => input.checked).map(input => input.value) }));
+    } catch { /* Storage is optional. */ }
+  };
+  groupHelper.querySelectorAll('[data-group] button').forEach(button => button.addEventListener('click', () => {
+    choices[button.closest('[data-group]').dataset.group] = button.dataset.value;
     updateSummary();
   }));
-
-  [dateInput, timeInput].forEach(input => input.addEventListener('change', updateSummary));
-
+  [dateInput, timeInput, menuInput, notesInput, ...services].forEach(input => input.addEventListener('input', updateSummary));
   copyButton.addEventListener('click', async () => {
-    const text = requestMessage();
-    try {
-      await navigator.clipboard.writeText(text);
-    } catch {
+    let copied = false;
+    try { await navigator.clipboard.writeText(requestMessage()); copied = true; }
+    catch {
       const fallback = document.createElement('textarea');
-      fallback.value = text;
-      fallback.style.position = 'fixed';
-      fallback.style.opacity = '0';
-      document.body.appendChild(fallback);
-      fallback.select();
-      document.execCommand('copy');
-      fallback.remove();
+      fallback.value = requestMessage();
+      fallback.style.position = 'fixed'; fallback.style.opacity = '0';
+      document.body.appendChild(fallback); fallback.select();
+      try { copied = document.execCommand('copy'); } catch { copied = false; }
+      fallback.remove(); copyButton.focus();
     }
-    copyButton.textContent = 'Đã sao chép yêu cầu';
-    status.textContent = 'Đã sao chép. Bây giờ mở Zalo và dán nội dung để Mỹ Yến tư vấn.';
+    copyButton.textContent = copied ? 'Đã sao chép yêu cầu' : 'Thử sao chép lại';
+    status.textContent = copied ? 'Đã sao chép. Mở Zalo và dán nội dung để gửi. Yêu cầu chỉ được gửi khi bạn gửi tin nhắn trong Zalo.' : 'Chưa sao chép được. Bạn có thể chọn và sao chép nội dung tóm tắt phía trên, rồi dán vào Zalo.';
   });
+  updateSummary();
 }
 
 const formatRequestDate = value => formatVietnamDate(value);

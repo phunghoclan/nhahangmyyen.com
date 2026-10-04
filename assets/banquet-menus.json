@@ -1,0 +1,473 @@
+{
+  "source": "https://nhahangmyyen.my.canva.site/tiec-menu",
+  "sourceLabel": "Tài liệu tiệc 2026",
+  "menus": [
+    {
+      "code": "1A",
+      "tier": 1,
+      "price": 3880000,
+      "dishes": [
+        "Tàu hủ ky tôm chiên",
+        "Súp sò điệp thịt cua Bích Ngọc",
+        "Mực xào XO",
+        "Vịt quay tiêu đen + bánh bao",
+        "Lẩu gà ớt hiểm + bún",
+        "Pudding xoài"
+      ]
+    },
+    {
+      "code": "1B",
+      "tier": 1,
+      "price": 3880000,
+      "dishes": [
+        "Chả giò hạnh nhân",
+        "Súp bóng cá tam tơ",
+        "Sò điệp xào XO",
+        "Gà quay + xôi gấc",
+        "Lẩu hải sản Thái + bún",
+        "Pudding xoài"
+      ]
+    },
+    {
+      "code": "1C",
+      "tier": 1,
+      "price": 3880000,
+      "dishes": [
+        "Chả giò tôm phô mai",
+        "Gà tiềm Trúc Xinh",
+        "Mực xào kiểu Hồng Kông",
+        "Bò nấu pa tê + bánh mì",
+        "Lẩu nấm hải sản + bún",
+        "Pudding dừa"
+      ]
+    },
+    {
+      "code": "1D",
+      "tier": 1,
+      "price": 3880000,
+      "dishes": [
+        "Chả giò Triều Châu",
+        "Gà tiềm ngũ quả",
+        "Tôm xào XO",
+        "Bò nấu tiêu xanh + bánh mì",
+        "Lẩu hải sản Quảng Đông + bún",
+        "Nho Mỹ"
+      ]
+    },
+    {
+      "code": "1E",
+      "tier": 1,
+      "price": 3880000,
+      "dishes": [
+        "Khai vị: Mực chiên bách hoa · Sò điệp XO",
+        "Súp bóng cá gà xé",
+        "Sườn rang muối",
+        "Tôm sốt mayonnaise",
+        "Lẩu cá lăng măng chua + bún",
+        "Sữa chua"
+      ]
+    },
+    {
+      "code": "1F",
+      "tier": 1,
+      "price": 3880000,
+      "dishes": [
+        "Khai vị: Bánh mì bách hoa · Mực xào XO",
+        "Gà tiềm đông trùng",
+        "Tôm rang muối Hồng Kông",
+        "Bò nấu đậu + bánh mì",
+        "Lẩu nấm hải sản + bún",
+        "Nho Mỹ"
+      ]
+    },
+    {
+      "code": "1G",
+      "tier": 1,
+      "price": 3880000,
+      "dishes": [
+        "Khai vị: Tàu hủ ky tôm chiên · Gỏi rong biển tôm thịt",
+        "Súp bắp thịt cua",
+        "Mực xào XO",
+        "Cá mú hấp Quảng Đông",
+        "Lẩu hải sản Thái + bún",
+        "Nho Mỹ"
+      ]
+    },
+    {
+      "code": "1H",
+      "tier": 1,
+      "price": 3880000,
+      "dishes": [
+        "Khai vị: Chả giò hạnh nhân · Dồi trường trộn hành gừng",
+        "Gà tiềm thuốc Bắc",
+        "Sò điệp xào kiểu Hồng Kông",
+        "Tôm sốt mayonnaise",
+        "Lẩu nấm hải sản + bún",
+        "Sữa chua"
+      ]
+    },
+    {
+      "code": "2A",
+      "tier": 2,
+      "price": 4180000,
+      "dishes": [
+        "Khai vị: Mực chiên bách hoa · Gỏi rong biển tôm thịt · Tàu hủ ky tôm",
+        "Gà tiềm Trúc Xinh",
+        "Sườn Kinh Đô",
+        "Bò nấu pa tê + bánh mì",
+        "Cơm chiên Dương Châu",
+        "Sữa chua"
+      ]
+    },
+    {
+      "code": "2B",
+      "tier": 2,
+      "price": 4180000,
+      "dishes": [
+        "Khai vị: Chả giò hạnh nhân · Mực xào XO · Gỏi sứa biển gà xé",
+        "Súp sò điệp thịt cua Bích Ngọc",
+        "Gà quay tỏi",
+        "Bò cocktail + bánh mì",
+        "Mì trộn xá xíu",
+        "Nho Mỹ"
+      ]
+    },
+    {
+      "code": "2C",
+      "tier": 2,
+      "price": 4180000,
+      "dishes": [
+        "Khai vị: Chả giò Phụng Nhãn · Dồi trường trộn hành gừng · Tôm xào XO",
+        "Súp bóng cá gà xé",
+        "Sườn Kinh Đô",
+        "Cá mú hấp Quảng Đông",
+        "Lẩu nấm hải sản + mì",
+        "Nho Mỹ"
+      ]
+    },
+    {
+      "code": "2D",
+      "tier": 2,
+      "price": 4180000,
+      "dishes": [
+        "Khai vị: Chả giò Triều Châu · Mực xào XO",
+        "Súp sò điệp thịt cua",
+        "Tôm mayonnaise trái thơm",
+        "Cá mú hấp Hồng Kông",
+        "Lẩu Thái hải sản + bún",
+        "Sữa chua"
+      ]
+    },
+    {
+      "code": "2E",
+      "tier": 2,
+      "price": 4180000,
+      "dishes": [
+        "Khai vị: Bánh mì bách hoa · Sò điệp XO",
+        "Súp bóng cá thịt cua",
+        "Vịt quay tiêu đen + bánh bao",
+        "Cá mú hấp Hồng Kông",
+        "Lẩu nấm hải sản",
+        "Pudding dừa"
+      ]
+    },
+    {
+      "code": "2F",
+      "tier": 2,
+      "price": 4180000,
+      "dishes": [
+        "Khai vị: Chả đùm bò · Cua viên tú cầu",
+        "Gà tiềm ngũ quả",
+        "Sò điệp xào XO",
+        "Bò nấu rượu vang + bánh mì",
+        "Lẩu cá lăng măng chua",
+        "Chè khúc bạch"
+      ]
+    },
+    {
+      "code": "3A",
+      "tier": 3,
+      "price": 4870000,
+      "dishes": [
+        "Khai vị: Gỏi củ hủ dừa · Chả giò hạnh nhân",
+        "Súp bóng cá cua",
+        "Mực xào XO",
+        "Vịt quay tiêu đen + bánh bao",
+        "Cá mú hấp Hồng Kông",
+        "Lẩu hải sản Quảng Đông",
+        "Pudding xoài"
+      ]
+    },
+    {
+      "code": "3B",
+      "tier": 3,
+      "price": 4870000,
+      "dishes": [
+        "Khai vị: Mực viên bách hoa · Dồi trường trộn hành gừng",
+        "Súp sò điệp thịt cua Bích Ngọc",
+        "Tàu hủ ky tôm chiên",
+        "Gà quay + xôi gấc",
+        "Cá mú hấp Quảng Đông",
+        "Lẩu Thái hải sản + bún",
+        "Pudding trà xanh"
+      ]
+    },
+    {
+      "code": "3C",
+      "tier": 3,
+      "price": 4870000,
+      "dishes": [
+        "Khai vị: Gỏi rong biển tôm thịt · Bánh mì bách hoa",
+        "Gà tiềm Trúc Xinh",
+        "Sườn Kinh Đô",
+        "Sò điệp xào XO",
+        "Cá mú xối mỡ",
+        "Lẩu nấm hải sản + mì",
+        "Pudding dừa"
+      ]
+    },
+    {
+      "code": "3D",
+      "tier": 3,
+      "price": 4870000,
+      "dishes": [
+        "Khai vị: Chả giò Phụng Nhãn · Tàu hủ ky tôm chiên · Gỏi ngó sen tôm thịt",
+        "Súp sò điệp thịt cua",
+        "Sườn rang muối",
+        "Mực xào XO",
+        "Gân nai đông cô",
+        "Lẩu gà ớt hiểm + mì",
+        "Pudding trà xanh"
+      ]
+    },
+    {
+      "code": "3E",
+      "tier": 3,
+      "price": 4870000,
+      "dishes": [
+        "Khai vị: Cua viên tú cầu · Gỏi Thái tôm mực · Sò điệp xào XO",
+        "Súp bóng cá gà xé",
+        "Tôm mayonnaise trái thơm",
+        "Vịt quay tiêu đen + bánh bao",
+        "Bạch linh đông cô",
+        "Lẩu Thái hải sản + bún",
+        "Pudding dừa"
+      ]
+    },
+    {
+      "code": "3F",
+      "tier": 3,
+      "price": 4870000,
+      "dishes": [
+        "Khai vị: Gỏi sứa biển gà xé · Sò điệp xào XO · Chả giò hạnh nhân",
+        "Súp rong biển hải sản",
+        "Mực bách hoa rang muối",
+        "Gà hấp muối",
+        "Gân nai đông cô",
+        "Lẩu cá lăng măng chua + bún",
+        "Pudding mè đen"
+      ]
+    },
+    {
+      "code": "4A",
+      "tier": 4,
+      "price": 5180000,
+      "dishes": [
+        "Khai vị: Chả giò Phụng Nhãn · Mực xào XO",
+        "Sườn Kinh Đô",
+        "Tôm sú hấp bia",
+        "Bò nấu pa tê + bánh mì",
+        "Cá mú sốt chua ngọt",
+        "Lẩu Thái hải sản + bún",
+        "Pudding dừa"
+      ]
+    },
+    {
+      "code": "4B",
+      "tier": 4,
+      "price": 5180000,
+      "dishes": [
+        "Khai vị: Sò điệp xào Hồng Kông · Tàu hủ ky tôm chiên",
+        "Gỏi sứa gà xé",
+        "Gà tiềm Trúc Xinh",
+        "Tôm trái thơm sốt mayonnaise",
+        "Heo sữa quay 1/2 con",
+        "Đông cô bạch linh",
+        "Lẩu Quảng Đông + mì",
+        "Pudding trà xanh"
+      ]
+    },
+    {
+      "code": "4C",
+      "tier": 4,
+      "price": 5180000,
+      "dishes": [
+        "Khai vị: Bánh mì bách hoa · Gỏi Thái tôm mực · Sườn Kinh Đô",
+        "Súp sò điệp thịt cua",
+        "Tôm trái thơm sốt mayonnaise",
+        "Gà bó xôi",
+        "Gân nai đông cô",
+        "Lẩu cá lăng măng chua + bún",
+        "Pudding dừa"
+      ]
+    },
+    {
+      "code": "4D",
+      "tier": 4,
+      "price": 5180000,
+      "dishes": [
+        "Khai vị: Sườn Kinh Đô · Sò điệp xào XO · Gỏi ngó sen tôm thịt",
+        "Súp hải sản rong biển",
+        "Chả giò hạnh nhân",
+        "Vịt quay + bánh bao",
+        "Tôm sú hấp bia",
+        "Lẩu gà ớt hiểm + mì",
+        "Pudding trà xanh"
+      ]
+    },
+    {
+      "code": "4E",
+      "tier": 4,
+      "price": 5180000,
+      "dishes": [
+        "Khai vị: Chả giò Long Phụng · Gỏi rong biển tôm thịt · Sò mực xào XO",
+        "Súp bắp cua",
+        "Tôm sú rang muối",
+        "Gà hấp sốt đông cô",
+        "Cá mú xối mỡ",
+        "Lẩu Thái hải sản + bún",
+        "Pudding dừa"
+      ]
+    },
+    {
+      "code": "4F",
+      "tier": 4,
+      "price": 5180000,
+      "dishes": [
+        "Khai vị: Mực bách hoa · Dồi trường trộn hành gừng · Gà xào hạt điều",
+        "Súp bóng cá thịt cua",
+        "Bông cải xanh xào sò điệp",
+        "Heo sữa quay 1/2 con",
+        "Bò nấu rượu vang + bánh mì",
+        "Lẩu nấm hải sản + mì",
+        "Pudding mè đen"
+      ]
+    },
+    {
+      "code": "5A",
+      "tier": 5,
+      "price": 5880000,
+      "dishes": [
+        "Khai vị: Chả giò Triều Châu · Gỏi ngó sen tôm thịt · Bánh mì bách hoa · Sò điệp xào XO",
+        "Gà tiềm bông đông trùng thảo",
+        "Mực rang muối",
+        "Heo sữa quay 1/2 con + bánh bao",
+        "Cá mú hấp Hồng Kông",
+        "Lẩu nấm hải sản + mì",
+        "Chè khúc bạch"
+      ]
+    },
+    {
+      "code": "5B",
+      "tier": 5,
+      "price": 5880000,
+      "dishes": [
+        "Khai vị: Tôm cuộn phô mai · Gỏi củ hủ dừa tôm thịt · Sườn Kinh Đô · Chả giò hải sản",
+        "Gà tiềm Trúc Xinh",
+        "Tôm càng cháy tỏi",
+        "Vịt quay tiêu + bánh bao",
+        "Cá mú hấp Hồng Kông",
+        "Lẩu Thái hải sản + bún",
+        "Pudding mè đen"
+      ]
+    },
+    {
+      "code": "5C",
+      "tier": 5,
+      "price": 5880000,
+      "dishes": [
+        "Khai vị: Chả giò Long Nhãn · Gỏi rong biển tôm thịt · Cua viên tú cầu · Mực xào XO",
+        "Súp sò điệp thịt cua Bích Ngọc",
+        "Cua lột chiên giòn",
+        "Gà quay + xôi gấc",
+        "Cá mú hấp Hồng Kông",
+        "Lẩu Quảng Đông + mì",
+        "Nho Mỹ"
+      ]
+    },
+    {
+      "code": "5D",
+      "tier": 5,
+      "price": 5880000,
+      "dishes": [
+        "Khai vị: Mực chiên bách hoa · Gỏi sứa biển gà xé · Tàu hủ ky tôm chiên · Sò điệp xào XO",
+        "Súp bóng cá tam tơ",
+        "Tôm sốt mayonnaise trái thơm",
+        "Heo sữa quay 1/2 con + bánh bao",
+        "Bò nấu pa tê + bánh mì",
+        "Lẩu gà ớt hiểm + mì",
+        "Pudding mè đen"
+      ]
+    },
+    {
+      "code": "6A",
+      "tier": 6,
+      "price": 6580000,
+      "dishes": [
+        "Khai vị: Mực chiên bách hoa · Chả giò Long Phụng · Gỏi rong biển tôm thịt · Gà xào hạt điều",
+        "Gà tiềm Trúc Xinh",
+        "Tôm mayonnaise trái thơm",
+        "Hải sâm đông cô gân nai",
+        "Heo sữa quay 1/2 con + bánh bao",
+        "Cá mú hấp Hồng Kông",
+        "Lẩu Quảng Đông + mì",
+        "Pudding dừa"
+      ]
+    },
+    {
+      "code": "6B",
+      "tier": 6,
+      "price": 6580000,
+      "dishes": [
+        "Khai vị: Chả giò Triều Châu · Gỏi ngó sen tôm thịt · Tàu hủ ky tôm chiên · Mực xào XO",
+        "Súp cua sò điệp",
+        "Cua lột chiên giòn",
+        "Gân nai sốt đông cô",
+        "Heo sữa quay 1/2 con + bánh bao",
+        "Cá mú hấp Quảng Đông",
+        "Lẩu Thái hải sản + bún",
+        "Pudding mè đen"
+      ]
+    },
+    {
+      "code": "6C",
+      "tier": 6,
+      "price": 6580000,
+      "dishes": [
+        "Khai vị: Chả giò Phụng Nhãn · Gỏi củ hủ dừa · Sò điệp xào XO · Bánh mì bách hoa",
+        "Gà tiềm bông đông trùng thảo",
+        "Sườn Kinh Đô",
+        "Vịt quay tiêu đen + bánh bao",
+        "Hải sâm đông cô gân nai",
+        "Cá mú hấp Hồng Kông",
+        "Lẩu nấm hải sản + mì",
+        "Chè khúc bạch"
+      ]
+    },
+    {
+      "code": "6D",
+      "tier": 6,
+      "price": 6580000,
+      "dishes": [
+        "Khai vị: Chả giò hạnh nhân · Dồi trường hấp hành gừng · Mực xào XO · Cua viên tú cầu",
+        "Sườn Kinh Đô",
+        "Sò điệp xào kiểu Hồng Kông",
+        "Tôm càng rang muối",
+        "Bò nấu tiêu xanh + bánh mì",
+        "Cá mú hấp Hồng Kông",
+        "Lẩu gà ớt hiểm + mì",
+        "Pudding mè đen"
+      ]
+    }
+  ]
+}

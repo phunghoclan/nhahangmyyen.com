@@ -33,3 +33,13 @@ When the restaurant provides approved menu data and real photos:
 3. Generate a complete Zalo-ready request containing selected dishes and logistics.
 4. Replace visual placeholders with verified photography of food, spaces, and events.
 5. Keep prices and availability confirmed by staff until a deliberate ordering and payment policy is approved.
+
+## Banquet menu release — October 2026
+
+- 34 prepared menus from the restaurant’s Canva Tiệc 2026 deck, six reference price tiers, 10 guests/table.
+- Menu codes, dish lists, and prices live in `assets/banquet-menus.json`; `scripts/render-banquet.mjs` updates menu cards and event-helper choices during the build.
+- Customers select a menu, add logistics, services and notes, then copy the request into Zalo. Nothing is submitted automatically. Draft details stay only in session storage in their browser tab.
+- Wedding offers are described generally; exact promotional entitlements are pending confirmation.
+- Before publishing detailed offers: confirm current prices, VAT, drinks/services inclusion, expiry, and the missing exactly-50-table promotion bracket.
+- Preserve source-specific dish names pending kitchen review: “Gà tiềm Trúc Xinh”, “Sò mực xào XO” (4E), “Chả giò Long Nhãn” (5C). Obvious spelling and typography were normalized.
+- Canva’s address differs from the existing site and its EMAIL field is a domain. Existing contact details retained pending verification.
