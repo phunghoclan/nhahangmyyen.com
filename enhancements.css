@@ -198,13 +198,23 @@ footer a {
 .menu-tabs a { border-color:#b89245; color:#755c20; }
 .menu-page-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:1.2rem; }
 .menu-page-card { margin:0; background:#fffdf8; border:1px solid rgba(25,59,50,.16); overflow:hidden; }
+.menu-page-open { display:block; width:100%; padding:0; border:0; background:transparent; color:inherit; text-align:left; cursor:zoom-in; }
 .menu-page-card img { width:100%; display:block; aspect-ratio:3/4; object-fit:cover; background:#ede4d1; }
 .menu-page-card figcaption { padding:.8rem 1rem; color:var(--jade); font:600 .92rem "Be Vietnam Pro",sans-serif; }
+.menu-page-card figcaption span { display:block; margin-top:.2rem; color:#7b6940; font-size:.75rem; font-weight:500; }
+.menu-page-open:focus-visible { outline:3px solid var(--gold); outline-offset:-3px; }
+.menu-viewer { width:min(1000px,96vw); max-width:none; max-height:94vh; padding:0; border:0; background:#18251e; color:#fffdf8; }
+.menu-viewer::backdrop { background:rgba(9,19,15,.82); }
+.menu-viewer-bar { display:flex; align-items:center; justify-content:space-between; gap:1rem; padding:.8rem 1rem; }
+.menu-viewer-title { margin:0; font-weight:600; }
+.menu-viewer-bar button { margin-left:.4rem; padding:.5rem .7rem; border:1px solid #d7c58c; background:transparent; color:#fffdf8; font:600 .8rem "Be Vietnam Pro",sans-serif; cursor:pointer; }
+.menu-viewer-bar button:disabled { opacity:.4; cursor:default; }
+.menu-viewer-image { display:block; width:100%; max-height:calc(94vh - 64px); object-fit:contain; background:#111; }
 .menu-photo-note { grid-column:1/-1; padding:clamp(2rem,5vw,4rem); background:#ede4d1; border-left:4px solid var(--aged-gold); max-width:760px; }
 .menu-photo-note h3 { font-size:clamp(1.7rem,3vw,2.6rem); margin:.5rem 0 1rem; }
 .menu-photo-note p:not(.eyebrow) { max-width:600px; color:#5d625b; }
 .menu-disclaimer { max-width:760px; margin:2rem 0 0; color:#6a695f; font-size:.82rem; }
-@media (max-width:800px) { .menu-catalogue-hero,.menu-intro { grid-template-columns:1fr; } .menu-catalogue-hero img { min-height:260px; max-height:360px; } .menu-catalogue-hero > div { padding:3rem 1.5rem; } .menu-intro { gap:1rem; } .menu-page-grid { grid-template-columns:repeat(2,1fr); gap:.8rem; } .menu-page-card figcaption { min-height:3.8rem; padding:.7rem; font-size:.8rem; } }
+@media (max-width:800px) { .menu-catalogue-hero,.menu-intro { grid-template-columns:1fr; } .menu-catalogue-hero img { min-height:260px; max-height:360px; } .menu-catalogue-hero > div { padding:3rem 1.5rem; } .menu-intro { gap:1rem; } .menu-page-grid { grid-template-columns:repeat(2,1fr); gap:.8rem; } .menu-page-card figcaption { min-height:3.8rem; padding:.7rem; font-size:.8rem; } .menu-viewer-bar { align-items:flex-start; } .menu-viewer-bar > div { display:flex; flex-wrap:wrap; justify-content:flex-end; } }
 .takeaway-hero .hero-copy { max-width:660px; }
 @media (max-width:900px) { .path-grid{grid-template-columns:1fr 1fr}.path-card:nth-child(2){border-right:0}.path-card:nth-child(-n+2){border-bottom:1px solid rgba(25,59,50,.22)}.path-panel{grid-template-columns:1fr;gap:1rem}.path-actions{flex-direction:row;align-items:center}.quiet-intro{grid-template-columns:1fr;gap:1rem}.service-split{grid-template-columns:1fr}.service-copy{max-width:none}.contact-landing{grid-template-columns:1fr}.contact-actions{align-items:flex-start}.hero-note{display:none}}
 @media (max-width:540px) { .path-grid{grid-template-columns:1fr}.path-card,.path-card:nth-child(2){border-right:0;border-bottom:1px solid rgba(25,59,50,.22);min-height:145px}.path-card:last-child{border-bottom:0}.path-card span{margin-bottom:1.4rem}.path-panel{padding:2rem 1.5rem}.path-actions{flex-wrap:wrap}.service-visual{min-height:420px}.contact-actions{align-items:stretch}.topbar{gap:.5rem}.brand img{width:100px;height:54px} }

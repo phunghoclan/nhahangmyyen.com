@@ -37,6 +37,12 @@ const gallery = document.querySelector('#menu-gallery');
 const tabs = [...document.querySelectorAll('[data-menu-tab]')];
 const tabCopy = document.querySelector('#menu-gallery-copy');
 const imagePath = (type, image) => `assets/menu/${type}/${image}.JPEG`;
+let activeMenuType = 'regular';
+let activeMenuIndex = 0;
+const viewer = document.createElement('dialog');
+viewer.className = 'menu-viewer';
+viewer.innerHTML = '<div class="menu-viewer-bar"><p class="menu-viewer-title"></p><div><button class="menu-viewer-previous" type="button" aria-label="Trang trước">‹</button><button class="menu-viewer-next" type="button" aria-label="Trang sau">›</button><button class="menu-viewer-close" type="button">Đóng</button></div></div><img class="menu-viewer-image" alt="">';
+document.body.appendChild(viewer);
 const categoryTargets = {
   seafood: 'Hải sản',
   roast: 'Vịt quay',
@@ -45,14 +51,35 @@ const categoryTargets = {
   noodles: 'Cơm chiên & mì xào'
 };
 
+const updateViewer = () => {
+  const [title, image] = menuImages[activeMenuType][activeMenuIndex];
+  const imageElement = viewer.querySelector('.menu-viewer-image');
+  imageElement.src = imagePath(activeMenuType, image);
+  imageElement.alt = `Trang thực đơn ${title} của Nhà Hàng Mỹ Yến`;
+  viewer.querySelector('.menu-viewer-title').textContent = title;
+  viewer.querySelector('.menu-viewer-previous').disabled = activeMenuIndex === 0;
+  viewer.querySelector('.menu-viewer-next').disabled = activeMenuIndex === menuImages[activeMenuType].length - 1;
+};
+
+const openViewer = (type, index) => {
+  activeMenuType = type;
+  activeMenuIndex = Number(index);
+  updateViewer();
+  viewer.showModal();
+};
+
 const renderGallery = type => {
   if (!gallery) return;
-  gallery.innerHTML = menuImages[type].map(([title, image]) => `<figure class="menu-page-card"><img loading="lazy" src="${imagePath(type, image)}" alt="Trang thực đơn ${title} của Nhà Hàng Mỹ Yến"><figcaption>${title}</figcaption></figure>`).join('');
+  gallery.innerHTML = menuImages[type].map(([title, image], index) => `<figure class="menu-page-card"><button class="menu-page-open" type="button" data-menu-index="${index}" aria-label="Mở lớn trang thực đơn ${title}"><img loading="lazy" src="${imagePath(type, image)}" alt="Trang thực đơn ${title} của Nhà Hàng Mỹ Yến"><figcaption>${title}<span>Xem lớn</span></figcaption></button></figure>`).join('');
+  gallery.querySelectorAll('.menu-page-open').forEach(button => button.addEventListener('click', () => openViewer(type, button.dataset.menuIndex)));
   tabs.forEach(tab => { const selected = tab.dataset.menuTab === type; tab.classList.toggle('is-selected', selected); tab.setAttribute('aria-pressed', String(selected)); });
   if (tabCopy) tabCopy.textContent = type === 'regular' ? 'Thực đơn gọi món gồm các món dùng chung, hải sản theo mùa và món đặt trước. Giá hải sản thời giá sẽ được Mỹ Yến xác nhận trực tiếp.' : 'Khám phá Dim Sum, mì & hủ tiếu, trà, cà phê, nước ép và thức uống. Hình ảnh chỉ mang tính minh họa; Mỹ Yến sẽ kiểm tra tình trạng món trước khi xác nhận.';
 };
 
 tabs.forEach(tab => tab.addEventListener('click', () => renderGallery(tab.dataset.menuTab)));
+viewer.querySelector('.menu-viewer-close').addEventListener('click', () => viewer.close());
+viewer.querySelector('.menu-viewer-previous').addEventListener('click', () => { activeMenuIndex -= 1; updateViewer(); });
+viewer.querySelector('.menu-viewer-next').addEventListener('click', () => { activeMenuIndex += 1; updateViewer(); });
 if (gallery) {
   renderGallery('regular');
   const category = new URLSearchParams(window.location.search).get('category');
