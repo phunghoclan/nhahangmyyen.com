@@ -59,6 +59,7 @@ if (banquetFilters && banquetCards.length) {
       return;
     }
     renderComparison();
+    comparison.scrollIntoView({ behavior: 'smooth', block: 'start' });
   }));
   more.addEventListener('click', () => {
     const firstNew = visibleCount;
