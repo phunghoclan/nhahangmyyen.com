@@ -81,6 +81,11 @@ const formatVietnamDate = value => {
 
 const groupHelper = document.querySelector('#group-helper');
 if (groupHelper) {
+  document.querySelectorAll('a[href="index.html#contact"]').forEach(link => {
+    link.href = '#group-helper';
+    if (link.classList.contains('button-small')) link.textContent = 'Chuẩn bị yêu cầu';
+    if (link.classList.contains('button') && !link.classList.contains('button-small')) link.textContent = 'Chuẩn bị yêu cầu tiệc';
+  });
   const choices = { occasion: '', guests: '', space: '' };
   const summary = document.querySelector('#group-summary-text');
   const copyButton = document.querySelector('#copy-group-request');
@@ -153,6 +158,19 @@ if (groupHelper) {
     }
     copyButton.textContent = copied ? 'Đã sao chép yêu cầu' : 'Thử sao chép lại';
     status.textContent = copied ? 'Đã sao chép. Mở Zalo và dán nội dung để gửi. Yêu cầu chỉ được gửi khi bạn gửi tin nhắn trong Zalo.' : 'Chưa sao chép được. Bạn có thể chọn và sao chép nội dung tóm tắt phía trên, rồi dán vào Zalo.';
+  });
+  groupHelper.querySelectorAll('a[href^="https://zalo.me/"]').forEach(link => {
+    link.textContent = 'Sao chép rồi mở Zalo';
+    link.addEventListener('click', async () => {
+      if (copyButton.disabled) return;
+      try {
+        await navigator.clipboard.writeText(requestMessage());
+        copyButton.textContent = 'Đã sao chép yêu cầu';
+        status.textContent = 'Đã sao chép. Zalo đang mở; hãy dán nội dung và bấm gửi để Mỹ Yến nhận yêu cầu.';
+      } catch {
+        status.textContent = 'Zalo đang mở. Hãy sao chép phần tóm tắt trước, rồi dán nội dung để gửi cho Mỹ Yến.';
+      }
+    });
   });
   updateSummary();
 }
@@ -229,12 +247,26 @@ document.querySelectorAll('[data-request-helper]').forEach(helper => {
     input.addEventListener('input', updateFromInput);
   });
 
-  copyButton.addEventListener('click', async () => {
-    const message = 'Chào Nhà Hàng Mỹ Yến, tôi muốn ' + helper.dataset.requestType + '.\n\n'
+  const requestMessage = () => 'Chào Nhà Hàng Mỹ Yến, tôi muốn ' + helper.dataset.requestType + '.\n\n'
       + selectedLines().map(line => '- ' + line.label + ': ' + line.value).join('\n')
       + '\n\nXin Mỹ Yến tư vấn giúp tôi. Cảm ơn.';
+  copyButton.addEventListener('click', async () => {
+    const message = requestMessage();
     await copyRequestText(message);
     copyButton.textContent = 'Đã sao chép yêu cầu';
-    status.textContent = 'Đã sao chép. Bây giờ mở Zalo và dán nội dung để Mỹ Yến tư vấn.';
+    status.textContent = 'Đã sao chép. Mở Zalo và dán nội dung để gửi yêu cầu cho Mỹ Yến.';
+  });
+  helper.querySelectorAll('a[href^="https://zalo.me/"]').forEach(link => {
+    link.textContent = 'Sao chép rồi mở Zalo';
+    link.addEventListener('click', async () => {
+      if (copyButton.disabled) return;
+      try {
+        await copyRequestText(requestMessage());
+        copyButton.textContent = 'Đã sao chép yêu cầu';
+        status.textContent = 'Đã sao chép. Zalo đang mở; hãy dán nội dung và bấm gửi để Mỹ Yến nhận yêu cầu.';
+      } catch {
+        status.textContent = 'Zalo đang mở. Hãy sao chép phần tóm tắt trước, rồi dán nội dung để gửi cho Mỹ Yến.';
+      }
+    });
   });
 });
