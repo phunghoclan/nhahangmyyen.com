@@ -86,12 +86,21 @@ const digitalMenuItems = [
   ['Nước ép trái cây', 35000, 'drinks'],
   ['Sinh tố', 35000, 'drinks'],
   ['Pepsi / 7Up / Soda', 18000, 'drinks'],
-  ['Nước suối', 12000, 'drinks']
-].map(([name, price, category], index) => ({ id: `dish-${index + 1}`, name, price, category }));
+  ['Nước suối', 12000, 'drinks'],
+  ['Ngỗng quay Hồng Kông', 1600000, 'roast', '1.600.000đ / con', 'con', 'Đặt trước'],
+  ['Vịt quay da giòn', 320000, 'roast', '320.000đ / ½ con · 660.000đ / con', 'món'],
+  ['Vịt quay tiêu đen', 320000, 'roast', '320.000đ / ½ con · 660.000đ / con', 'món'],
+  ['Xá xíu mật ong', 180000, 'roast', '180.000đ – 380.000đ', 'món'],
+  ['Vịt nướng Pì Pà', 600000, 'roast', '600.000đ / con', 'con', 'Đặt trước'],
+  ['Vịt quay Bắc Kinh 2 món', 350000, 'roast', '350.000đ / ½ con · 680.000đ / con', 'món'],
+  ['Heo sữa quay nguyên con', 400000, 'roast', '400.000đ nhỏ · 800.000đ / ½ con · 1.600.000đ / con', 'món'],
+  ['Heo quay 3 món', 880000, 'roast', '880.000đ', 'món'],
+  ['Bồ câu quay', 180000, 'roast', '180.000đ / con', 'con']
+].map(([name, price, category, priceLabel, unit, note], index) => ({ id: `dish-${index + 1}`, name, price, category, priceLabel, unit: unit || 'phần', note }));
 
 const shortlistKey = 'myyen-menu-shortlist-v1';
 const quantityKey = 'myyen-menu-quantities-v1';
-const categoryNames = { dimsum: 'Dim Sum', noodles: 'Mì & hủ tiếu', drinks: 'Thức uống' };
+const categoryNames = { dimsum: 'Dim Sum', roast: 'Món quay & gia cầm', noodles: 'Mì & hủ tiếu', drinks: 'Thức uống' };
 const formatPrice = value => new Intl.NumberFormat('vi-VN').format(value) + 'đ';
 const normalizeText = value => value.normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/đ/g, 'd').toLowerCase();
 
@@ -136,7 +145,7 @@ if (dishGrid) {
     count.textContent = selectedItems.length;
     dockCount.textContent = selectedItems.length;
     dock.hidden = selectedItems.length === 0;
-    shortlistItems.innerHTML = selectedItems.map(item => `<li><span>${item.name}<small>${formatPrice(item.price)} / phần</small></span><span class="dish-quantity"><button type="button" data-decrease-dish="${item.id}" aria-label="Giảm ${item.name}">−</button><strong aria-label="${quantities[item.id]} phần">${quantities[item.id]}</strong><button type="button" data-increase-dish="${item.id}" aria-label="Tăng ${item.name}">+</button></span><button type="button" data-remove-dish="${item.id}" aria-label="Bỏ ${item.name}">Bỏ</button></li>`).join('');
+    shortlistItems.innerHTML = selectedItems.map(item => `<li><span>${item.name}<small>${item.priceLabel || `${formatPrice(item.price)} / ${item.unit}`}${item.note ? ` · ${item.note}` : ''}</small></span><span class="dish-quantity"><button type="button" data-decrease-dish="${item.id}" aria-label="Giảm ${item.name}">−</button><strong aria-label="Số lượng ${quantities[item.id]}">${quantities[item.id]}</strong><button type="button" data-increase-dish="${item.id}" aria-label="Tăng ${item.name}">+</button></span><button type="button" data-remove-dish="${item.id}" aria-label="Bỏ ${item.name}">Bỏ</button></li>`).join('');
     shortlistEmpty.hidden = selectedItems.length > 0;
     clearButton.hidden = selectedItems.length === 0;
     shortlistItems.querySelectorAll('[data-remove-dish]').forEach(button => button.addEventListener('click', () => {
@@ -167,7 +176,7 @@ if (dishGrid) {
     moreButton.hidden = visible.length >= matching.length;
     dishGrid.innerHTML = visible.map(item => {
       const isSelected = selected.includes(item.id);
-      return `<article class="dish-item"><p class="eyebrow">${categoryNames[item.category]}</p><h3>${item.name}</h3><p class="dish-item-price">${formatPrice(item.price)} <small>tham khảo</small></p><button type="button" data-add-dish="${item.id}" aria-pressed="${isSelected}">${isSelected ? 'Đã thêm' : 'Thêm vào yêu cầu'}</button></article>`;
+      return `<article class="dish-item"><p class="eyebrow">${categoryNames[item.category]}</p><h3>${item.name}</h3><p class="dish-item-price">${item.priceLabel || formatPrice(item.price)} <small>tham khảo</small></p>${item.note ? `<p class="dish-item-note">${item.note}</p>` : ''}<button type="button" data-add-dish="${item.id}" aria-pressed="${isSelected}">${isSelected ? 'Đã thêm' : 'Thêm vào yêu cầu'}</button></article>`;
     }).join('');
     dishGrid.querySelectorAll('[data-add-dish]').forEach(button => button.addEventListener('click', () => {
       const id = button.dataset.addDish;

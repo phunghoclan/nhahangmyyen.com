@@ -208,6 +208,7 @@ footer a {
 .dish-item h3 { margin:.55rem 0; color:var(--jade); font:700 1rem/1.35 "Be Vietnam Pro",sans-serif; }
 .dish-item-price { margin:auto 0 .9rem; color:#6f561a; font-weight:700; }
 .dish-item-price small { font-size:.68rem; font-weight:500; }
+.dish-item-note { margin:-.45rem 0 .8rem; color:#6a695f; font-size:.72rem; font-weight:600; }
 .dish-item button { width:100%; padding:.72rem .6rem; border:1px solid var(--jade); background:transparent; color:var(--jade); font:700 .76rem "Be Vietnam Pro",sans-serif; cursor:pointer; }
 .dish-item button[aria-pressed="true"] { background:var(--jade); color:var(--ivory); }
 .dish-shortlist { position:sticky; top:105px; padding:1.5rem; background:var(--jade); color:var(--ivory); }
