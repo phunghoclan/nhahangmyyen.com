@@ -70,7 +70,7 @@ const openViewer = (type, index) => {
 
 const renderGallery = type => {
   if (!gallery) return;
-  gallery.innerHTML = menuImages[type].map(([title, image], index) => `<figure class="menu-page-card"><button class="menu-page-open" type="button" data-menu-index="${index}" aria-label="Mở lớn trang thực đơn ${title}"><img loading="lazy" src="${imagePath(type, image)}" alt="Trang thực đơn ${title} của Nhà Hàng Mỹ Yến"><figcaption>${title}<span>Xem lớn</span></figcaption></button></figure>`).join('');
+  gallery.innerHTML = menuImages[type].map(([title, image], index) => `<figure class="menu-page-card"><button class="menu-page-open" type="button" data-menu-index="${index}" aria-label="Phóng to trang thực đơn ${title}"><img loading="lazy" src="${imagePath(type, image)}" alt="Trang thực đơn ${title} của Nhà Hàng Mỹ Yến"><figcaption>${title}<span>Phóng to</span></figcaption></button></figure>`).join('');
   gallery.querySelectorAll('.menu-page-open').forEach(button => button.addEventListener('click', () => openViewer(type, button.dataset.menuIndex)));
   tabs.forEach(tab => { const selected = tab.dataset.menuTab === type; tab.classList.toggle('is-selected', selected); tab.setAttribute('aria-pressed', String(selected)); });
   if (tabCopy) tabCopy.textContent = type === 'regular' ? 'Thực đơn gọi món gồm các món dùng chung, hải sản theo mùa và món đặt trước. Giá hải sản thời giá sẽ được Mỹ Yến xác nhận trực tiếp.' : 'Khám phá Dim Sum, mì & hủ tiếu, trà, cà phê, nước ép và thức uống. Hình ảnh chỉ mang tính minh họa; Mỹ Yến sẽ kiểm tra tình trạng món trước khi xác nhận.';
