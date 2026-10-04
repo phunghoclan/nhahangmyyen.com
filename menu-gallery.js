@@ -96,18 +96,19 @@ const digitalMenuItems = [
   ['Heo sữa quay nguyên con', 400000, 'roast', '400.000đ nhỏ · 800.000đ / ½ con · 1.600.000đ / con', 'món'],
   ['Heo quay 3 món', 880000, 'roast', '880.000đ', 'món'],
   ['Bồ câu quay', 180000, 'roast', '180.000đ / con', 'con'],
-  ['Tôm miến tay cầm', 300000, 'seafood', '300.000đ – 620.000đ', 'món'],
-  ['Tôm kim sa Mỹ Yến', 260000, 'seafood', '260.000đ – 520.000đ', 'món'],
-  ['Tôm xào sốt X.O', 260000, 'seafood', '260.000đ – 520.000đ', 'món'],
-  ['Tôm sốt mayonnaise trái thơm', 260000, 'seafood', '260.000đ – 520.000đ', 'món'],
-  ['Tôm rang muối', 260000, 'seafood', '260.000đ – 520.000đ', 'món'],
-  ['Tôm rang xì dầu', 260000, 'seafood', '260.000đ – 520.000đ', 'món'],
-  ['Tôm xào cung bửu', 260000, 'seafood', '260.000đ – 520.000đ', 'món'],
-  ['Tôm thủy tinh', 260000, 'seafood', '260.000đ – 520.000đ', 'món']
-].map(([name, price, category, priceLabel, unit, note], index) => ({ id: `dish-${index + 1}`, name, price, category, priceLabel, unit: unit || 'phần', note }));
+  ['Tôm miến tay cầm', 300000, 'seafood', '', 'món', '', [['small', 'Phần nhỏ', 300000], ['large', 'Phần lớn', 620000]]],
+  ['Tôm kim sa Mỹ Yến', 260000, 'seafood', '', 'món', '', [['small', 'Phần nhỏ', 260000], ['large', 'Phần lớn', 520000]]],
+  ['Tôm xào sốt X.O', 260000, 'seafood', '', 'món', '', [['small', 'Phần nhỏ', 260000], ['large', 'Phần lớn', 520000]]],
+  ['Tôm sốt mayonnaise trái thơm', 260000, 'seafood', '', 'món', '', [['small', 'Phần nhỏ', 260000], ['large', 'Phần lớn', 520000]]],
+  ['Tôm rang muối', 260000, 'seafood', '', 'món', '', [['small', 'Phần nhỏ', 260000], ['large', 'Phần lớn', 520000]]],
+  ['Tôm rang xì dầu', 260000, 'seafood', '', 'món', '', [['small', 'Phần nhỏ', 260000], ['large', 'Phần lớn', 520000]]],
+  ['Tôm xào cung bửu', 260000, 'seafood', '', 'món', '', [['small', 'Phần nhỏ', 260000], ['large', 'Phần lớn', 520000]]],
+  ['Tôm thủy tinh', 260000, 'seafood', '', 'món', '', [['small', 'Phần nhỏ', 260000], ['large', 'Phần lớn', 520000]]]
+].map(([name, price, category, priceLabel, unit, note, sizes], index) => ({ id: `dish-${index + 1}`, name, price, category, priceLabel, unit: unit || 'phần', note, sizes: sizes?.map(([id, label, sizePrice]) => ({ id, label, price: sizePrice })) }));
 
 const shortlistKey = 'myyen-menu-shortlist-v1';
 const quantityKey = 'myyen-menu-quantities-v1';
+const sizeKey = 'myyen-menu-sizes-v1';
 const categoryNames = { dimsum: 'Dim Sum', roast: 'Món quay & gia cầm', seafood: 'Tôm & hải sản', noodles: 'Mì & hủ tiếu', drinks: 'Thức uống' };
 const formatPrice = value => new Intl.NumberFormat('vi-VN').format(value) + 'đ';
 const normalizeText = value => value.normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/đ/g, 'd').toLowerCase();
@@ -129,6 +130,7 @@ if (dishGrid) {
   let activeFilter = 'dimsum';
   let selected = [];
   let quantities = {};
+  let selectedSizes = {};
   try {
     const saved = JSON.parse(localStorage.getItem(shortlistKey) || '[]');
     if (Array.isArray(saved)) selected = saved.filter(id => digitalMenuItems.some(item => item.id === id));
@@ -137,14 +139,26 @@ if (dishGrid) {
     const saved = JSON.parse(localStorage.getItem(quantityKey) || '{}');
     if (saved && typeof saved === 'object' && !Array.isArray(saved)) quantities = saved;
   } catch { quantities = {}; }
+  try {
+    const saved = JSON.parse(localStorage.getItem(sizeKey) || '{}');
+    if (saved && typeof saved === 'object' && !Array.isArray(saved)) selectedSizes = saved;
+  } catch { selectedSizes = {}; }
   selected.forEach(id => { quantities[id] = Math.max(1, Number(quantities[id]) || 1); });
+
+  const chosenSize = item => item.sizes?.find(size => size.id === selectedSizes[item.id]) || item.sizes?.[0];
+  const itemPriceLabel = item => {
+    const size = chosenSize(item);
+    return size ? `${size.label} · ${formatPrice(size.price)}` : (item.priceLabel || `${formatPrice(item.price)} / ${item.unit}`);
+  };
 
   const saveShortlist = () => {
     localStorage.setItem(shortlistKey, JSON.stringify(selected));
     localStorage.setItem(quantityKey, JSON.stringify(quantities));
+    localStorage.setItem(sizeKey, JSON.stringify(selectedSizes));
     const names = selected.map(id => {
       const item = digitalMenuItems.find(candidate => candidate.id === id);
-      return item ? `${item.name} × ${quantities[id] || 1}` : null;
+      const size = item && chosenSize(item);
+      return item ? `${item.name}${size ? ` · ${size.label}` : ''} × ${quantities[id] || 1}` : null;
     }).filter(Boolean);
     localStorage.setItem('myyen-menu-shortlist-names-v1', JSON.stringify(names));
   };
@@ -153,12 +167,13 @@ if (dishGrid) {
     count.textContent = selectedItems.length;
     dockCount.textContent = selectedItems.length;
     dock.hidden = selectedItems.length === 0;
-    shortlistItems.innerHTML = selectedItems.map(item => `<li><span>${item.name}<small>${item.priceLabel || `${formatPrice(item.price)} / ${item.unit}`}${item.note ? ` · ${item.note}` : ''}</small></span><span class="dish-quantity"><button type="button" data-decrease-dish="${item.id}" aria-label="Giảm ${item.name}">−</button><strong aria-label="Số lượng ${quantities[item.id]}">${quantities[item.id]}</strong><button type="button" data-increase-dish="${item.id}" aria-label="Tăng ${item.name}">+</button></span><button type="button" data-remove-dish="${item.id}" aria-label="Bỏ ${item.name}">Bỏ</button></li>`).join('');
+    shortlistItems.innerHTML = selectedItems.map(item => `<li><span>${item.name}<small>${itemPriceLabel(item)}${item.note ? ` · ${item.note}` : ''}</small></span><span class="dish-quantity"><button type="button" data-decrease-dish="${item.id}" aria-label="Giảm ${item.name}">−</button><strong aria-label="Số lượng ${quantities[item.id]}">${quantities[item.id]}</strong><button type="button" data-increase-dish="${item.id}" aria-label="Tăng ${item.name}">+</button></span><button type="button" data-remove-dish="${item.id}" aria-label="Bỏ ${item.name}">Bỏ</button></li>`).join('');
     shortlistEmpty.hidden = selectedItems.length > 0;
     clearButton.hidden = selectedItems.length === 0;
     shortlistItems.querySelectorAll('[data-remove-dish]').forEach(button => button.addEventListener('click', () => {
       selected = selected.filter(id => id !== button.dataset.removeDish);
       delete quantities[button.dataset.removeDish];
+      delete selectedSizes[button.dataset.removeDish];
       saveShortlist();
       renderDishes();
       renderShortlist();
@@ -184,16 +199,27 @@ if (dishGrid) {
     moreButton.hidden = visible.length >= matching.length;
     dishGrid.innerHTML = visible.map(item => {
       const isSelected = selected.includes(item.id);
-      return `<article class="dish-item"><p class="eyebrow">${categoryNames[item.category]}</p><h3>${item.name}</h3><p class="dish-item-price">${item.priceLabel || formatPrice(item.price)} <small>tham khảo</small></p>${item.note ? `<p class="dish-item-note">${item.note}</p>` : ''}<button type="button" data-add-dish="${item.id}" aria-pressed="${isSelected}">${isSelected ? 'Đã thêm' : 'Thêm vào yêu cầu'}</button></article>`;
+      const size = chosenSize(item);
+      const sizeChoices = item.sizes ? `<div class="dish-size-options" role="group" aria-label="Chọn khẩu phần ${item.name}">${item.sizes.map(option => `<button type="button" data-size-dish="${item.id}" data-size="${option.id}" aria-pressed="${option.id === size.id}"><span>${option.label}</span><strong>${formatPrice(option.price)}</strong></button>`).join('')}</div>` : '';
+      return `<article class="dish-item"><p class="eyebrow">${categoryNames[item.category]}</p><h3>${item.name}</h3>${sizeChoices || `<p class="dish-item-price">${item.priceLabel || formatPrice(item.price)} <small>tham khảo</small></p>`}${item.note ? `<p class="dish-item-note">${item.note}</p>` : ''}<button type="button" data-add-dish="${item.id}" aria-pressed="${isSelected}">${isSelected ? 'Đã thêm' : 'Thêm vào yêu cầu'}</button></article>`;
     }).join('');
+    dishGrid.querySelectorAll('[data-size-dish]').forEach(button => button.addEventListener('click', () => {
+      selectedSizes[button.dataset.sizeDish] = button.dataset.size;
+      saveShortlist();
+      renderDishes();
+      renderShortlist();
+    }));
     dishGrid.querySelectorAll('[data-add-dish]').forEach(button => button.addEventListener('click', () => {
       const id = button.dataset.addDish;
       if (selected.includes(id)) {
         selected = selected.filter(value => value !== id);
         delete quantities[id];
+        delete selectedSizes[id];
       } else {
         selected = [...selected, id];
         quantities[id] = 1;
+        const item = digitalMenuItems.find(candidate => candidate.id === id);
+        if (item?.sizes && !selectedSizes[id]) selectedSizes[id] = item.sizes[0].id;
       }
       saveShortlist();
       renderDishes();
@@ -218,6 +244,7 @@ if (dishGrid) {
   clearButton.addEventListener('click', () => {
     selected = [];
     quantities = {};
+    selectedSizes = {};
     saveShortlist();
     renderDishes();
     renderShortlist();

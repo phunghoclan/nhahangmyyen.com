@@ -211,6 +211,10 @@ footer a {
 .dish-item-note { margin:-.45rem 0 .8rem; color:#6a695f; font-size:.72rem; font-weight:600; }
 .dish-item button { width:100%; padding:.72rem .6rem; border:1px solid var(--jade); background:transparent; color:var(--jade); font:700 .76rem "Be Vietnam Pro",sans-serif; cursor:pointer; }
 .dish-item button[aria-pressed="true"] { background:var(--jade); color:var(--ivory); }
+.dish-size-options { display:grid; grid-template-columns:1fr 1fr; gap:.45rem; margin:auto 0 .9rem; }
+.dish-size-options button { padding:.55rem .35rem; font-size:.68rem; }
+.dish-size-options button span,.dish-size-options button strong { display:block; }
+.dish-size-options button strong { margin-top:.2rem; font-size:.72rem; }
 .dish-shortlist { position:sticky; top:105px; padding:1.5rem; background:var(--jade); color:var(--ivory); }
 .dish-shortlist .eyebrow { color:#e3bf6a; }
 .dish-shortlist h3 { font:600 1.6rem/1.2 "Playfair Display",serif; }
