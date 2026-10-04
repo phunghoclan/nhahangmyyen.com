@@ -17,7 +17,7 @@ const menuImages = {
     ['Trà, cà phê & nước giải khát', 'd74a8b9bcea1db2a4e4621a0f0392a32'], ['Nước ép, sinh tố & bia', 'b3d4dab34d44c0da15a8cea2acf7a801']
   ],
   dimsum: [
-    ['Dim Sum & bánh bao', 'character-buns'], ['Mì & hủ tiếu', 'egg-tarts'], ['Đồ uống', 'character-buns']
+    ['Dim Sum & bánh bao', 'character-buns'], ['Mì & hủ tiếu', 'egg-tarts'], ['Thức uống', 'character-buns']
   ]
 };
 
@@ -28,9 +28,13 @@ const imagePath = (type, image) => type === 'dimsum' ? `assets/${image}.jpg` : `
 
 const renderGallery = type => {
   if (!gallery) return;
+  if (type === 'dimsum') {
+    gallery.innerHTML = '<div class="menu-photo-note"><p class="eyebrow">Đang hoàn thiện</p><h3>Ảnh món Dim Sum sẽ được cập nhật cùng thực đơn số.</h3><p>Để thông tin rõ ràng, Mỹ Yến chưa dùng ảnh minh họa thay cho ảnh trong thực đơn Dim Sum. Bạn có thể nhắn Zalo để hỏi món, giá và tình trạng phục vụ.</p><a class="button" href="https://zalo.me/0948900488" target="_blank" rel="noopener">Nhắn Zalo hỏi Dim Sum</a></div>';
+  } else {
   gallery.innerHTML = menuImages[type].map(([title, image]) => `<figure class="menu-page-card"><img loading="lazy" src="${imagePath(type, image)}" alt="Trang thực đơn ${title} của Nhà Hàng Mỹ Yến"><figcaption>${title}</figcaption></figure>`).join('');
+  }
   tabs.forEach(tab => { const selected = tab.dataset.menuTab === type; tab.classList.toggle('is-selected', selected); tab.setAttribute('aria-pressed', String(selected)); });
-  if (tabCopy) tabCopy.textContent = type === 'regular' ? 'Thực đơn gọi món gồm các món dùng chung, hải sản theo mùa và món đặt trước. Giá hải sản thời giá sẽ được Mỹ Yến xác nhận trực tiếp.' : 'Chọn món Dim Sum, mì hoặc thức uống bạn quan tâm. Mỹ Yến sẽ kiểm tra tình trạng món trước khi xác nhận.';
+  if (tabCopy) tabCopy.textContent = type === 'regular' ? 'Thực đơn gọi món gồm các món dùng chung, hải sản theo mùa và món đặt trước. Giá hải sản thời giá sẽ được Mỹ Yến xác nhận trực tiếp.' : 'Danh mục Dim Sum, mì & thức uống đang được hoàn thiện với ảnh món thật. Trong lúc này, bạn có thể xem danh sách món và giá trong thực đơn gốc hoặc nhắn Mỹ Yến để kiểm tra món.';
 };
 
 tabs.forEach(tab => tab.addEventListener('click', () => renderGallery(tab.dataset.menuTab)));

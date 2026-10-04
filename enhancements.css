@@ -197,6 +197,9 @@ footer a {
 .menu-page-card { margin:0; background:#fffdf8; border:1px solid rgba(25,59,50,.16); overflow:hidden; }
 .menu-page-card img { width:100%; display:block; aspect-ratio:3/4; object-fit:cover; background:#ede4d1; }
 .menu-page-card figcaption { padding:.8rem 1rem; color:var(--jade); font:600 .92rem "Be Vietnam Pro",sans-serif; }
+.menu-photo-note { grid-column:1/-1; padding:clamp(2rem,5vw,4rem); background:#ede4d1; border-left:4px solid var(--aged-gold); max-width:760px; }
+.menu-photo-note h3 { font-size:clamp(1.7rem,3vw,2.6rem); margin:.5rem 0 1rem; }
+.menu-photo-note p:not(.eyebrow) { max-width:600px; color:#5d625b; }
 .menu-disclaimer { max-width:760px; margin:2rem 0 0; color:#6a695f; font-size:.82rem; }
 @media (max-width:800px) { .menu-catalogue-hero,.menu-intro { grid-template-columns:1fr; } .menu-catalogue-hero img { min-height:260px; max-height:360px; } .menu-catalogue-hero > div { padding:3rem 1.5rem; } .menu-intro { gap:1rem; } .menu-page-grid { grid-template-columns:repeat(2,1fr); gap:.8rem; } .menu-page-card figcaption { min-height:3.8rem; padding:.7rem; font-size:.8rem; } }
 .takeaway-hero .hero-copy { max-width:660px; }
