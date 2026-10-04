@@ -95,12 +95,20 @@ const digitalMenuItems = [
   ['Vịt quay Bắc Kinh 2 món', 350000, 'roast', '350.000đ / ½ con · 680.000đ / con', 'món'],
   ['Heo sữa quay nguyên con', 400000, 'roast', '400.000đ nhỏ · 800.000đ / ½ con · 1.600.000đ / con', 'món'],
   ['Heo quay 3 món', 880000, 'roast', '880.000đ', 'món'],
-  ['Bồ câu quay', 180000, 'roast', '180.000đ / con', 'con']
+  ['Bồ câu quay', 180000, 'roast', '180.000đ / con', 'con'],
+  ['Tôm miến tay cầm', 300000, 'seafood', '300.000đ – 620.000đ', 'món'],
+  ['Tôm kim sa Mỹ Yến', 260000, 'seafood', '260.000đ – 520.000đ', 'món'],
+  ['Tôm xào sốt X.O', 260000, 'seafood', '260.000đ – 520.000đ', 'món'],
+  ['Tôm sốt mayonnaise trái thơm', 260000, 'seafood', '260.000đ – 520.000đ', 'món'],
+  ['Tôm rang muối', 260000, 'seafood', '260.000đ – 520.000đ', 'món'],
+  ['Tôm rang xì dầu', 260000, 'seafood', '260.000đ – 520.000đ', 'món'],
+  ['Tôm xào cung bửu', 260000, 'seafood', '260.000đ – 520.000đ', 'món'],
+  ['Tôm thủy tinh', 260000, 'seafood', '260.000đ – 520.000đ', 'món']
 ].map(([name, price, category, priceLabel, unit, note], index) => ({ id: `dish-${index + 1}`, name, price, category, priceLabel, unit: unit || 'phần', note }));
 
 const shortlistKey = 'myyen-menu-shortlist-v1';
 const quantityKey = 'myyen-menu-quantities-v1';
-const categoryNames = { dimsum: 'Dim Sum', roast: 'Món quay & gia cầm', noodles: 'Mì & hủ tiếu', drinks: 'Thức uống' };
+const categoryNames = { dimsum: 'Dim Sum', roast: 'Món quay & gia cầm', seafood: 'Tôm & hải sản', noodles: 'Mì & hủ tiếu', drinks: 'Thức uống' };
 const formatPrice = value => new Intl.NumberFormat('vi-VN').format(value) + 'đ';
 const normalizeText = value => value.normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/đ/g, 'd').toLowerCase();
 
