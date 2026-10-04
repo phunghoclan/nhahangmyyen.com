@@ -284,7 +284,9 @@ footer a {
 .banquet-intro .eyebrow, .banquet-intro .text-link { color: #f1d674; }
 .banquet-browser > p { max-width: 850px; }
 .banquet-filters { display: flex; flex-wrap: wrap; gap: .6rem; margin: 1.8rem 0; }
-.banquet-filters button { padding: .8rem 1rem; min-height: 48px; border: 1px solid #687b6e; background: transparent; color: var(--jade); font: 600 .88rem "Be Vietnam Pro",sans-serif; cursor: pointer; }
+.banquet-filters button { padding: .72rem 1rem; min-height: 48px; border: 1px solid #687b6e; background: transparent; color: var(--jade); font: 600 .88rem "Be Vietnam Pro",sans-serif; cursor: pointer; text-align: left; }
+.banquet-filters button strong,.banquet-filters button small { display: block; }
+.banquet-filters button small { margin-top: .15rem; font-size: .72rem; font-weight: 400; }
 .banquet-filters button[aria-pressed="true"] { background: var(--jade); color: var(--ivory); }
 .banquet-selection-note { margin: 1.25rem 0 .45rem; color: var(--jade); font-weight: 600; }
 .banquet-grid { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: 1rem; align-items: start; }
@@ -297,6 +299,19 @@ footer a {
 .banquet-card ol { padding-left: 1.25rem; font-size: .92rem; }
 .banquet-card li { margin-bottom: .8rem; }
 .banquet-card .button { width: 100%; text-align: center; font-size: .8rem; padding: .9rem .6rem; }
+.compare-toggle { width: 100%; margin: 0 0 .7rem; padding: .78rem .6rem; border: 1px solid #687b6e; background: transparent; color: var(--jade); font: 600 .82rem "Be Vietnam Pro",sans-serif; cursor: pointer; }
+.compare-toggle[aria-pressed="true"] { background: #e4ece5; border-color: var(--jade); }
+.banquet-comparison { margin: 1.4rem 0 2rem; padding: clamp(1.2rem,3vw,2rem); background: #edf2ed; border: 1px solid #c5d0c6; }
+.comparison-heading { display: flex; align-items: start; justify-content: space-between; gap: 1rem; }
+.comparison-heading h3,.comparison-grid h4 { margin: .2rem 0 .4rem; font: 600 1.25rem/1.35 "Be Vietnam Pro",sans-serif; color: var(--jade); }
+.comparison-heading p { margin: 0; max-width: 640px; }
+.comparison-clear { padding: .7rem .9rem; border: 1px solid #687b6e; background: transparent; color: var(--jade); font: 600 .8rem "Be Vietnam Pro",sans-serif; cursor: pointer; white-space: nowrap; }
+.comparison-scroll { overflow-x: auto; padding-bottom: .25rem; }
+.comparison-grid { display: grid; grid-auto-flow: column; grid-auto-columns: minmax(245px,1fr); gap: 1rem; min-width: min-content; }
+.comparison-grid article { padding: 1.1rem; background: #fffdf8; border: 1px solid #d1d3c8; }
+.comparison-grid ol { margin: 1rem 0; padding-left: 1.2rem; font-size: .88rem; }
+.comparison-grid li { margin-bottom: .65rem; }
+.comparison-grid .button { width: 100%; text-align: center; font-size: .8rem; }
 .banquet-more { display: block; margin: 2rem auto 0; }
 .banquet-teaser { display: grid; grid-template-columns: 1.2fr 1fr; gap: clamp(2rem,6vw,6rem); background: #eee5d4; align-items: center; }
 .banquet-teaser h3 { font: 600 1.3rem/1.5 "Be Vietnam Pro",sans-serif; }
@@ -308,4 +323,4 @@ footer a {
 #group-summary-text { white-space: pre-line; overflow-wrap: anywhere; }
 .banquet-filters button:focus-visible, .banquet-card summary:focus-visible, .banquet-card a:focus-visible { outline: 3px solid #b89245; outline-offset: 4px; }
 @media(max-width:1000px) { .banquet-grid { grid-template-columns: repeat(2,minmax(0,1fr)); } }
-@media(max-width:650px) { .banquet-grid,.banquet-teaser,.banquet-services { grid-template-columns: 1fr; }.banquet-intro { padding-top: 8rem; } }
+@media(max-width:650px) { .banquet-grid,.banquet-teaser,.banquet-services { grid-template-columns: 1fr; }.banquet-intro { padding-top: 8rem; }.comparison-heading { display: block; }.comparison-clear { margin-top: 1rem; } }
