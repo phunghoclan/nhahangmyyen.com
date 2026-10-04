@@ -16,6 +16,14 @@ if (toggle && nav) toggle.addEventListener('click', () => {
   const open = nav.classList.toggle('open');
   toggle.setAttribute('aria-expanded', String(open));
 });
+
+// Give the mobile contact action a useful destination on every page.
+const mobileContact = document.querySelector('.mobile-actions a:last-child[href="#contact"]');
+if (mobileContact) {
+  const pageHelper = ['table-helper', 'corporate-helper', 'takeaway-helper']
+    .find(id => document.querySelector('#' + id));
+  mobileContact.href = pageHelper ? '#' + pageHelper : 'index.html#contact';
+}
 const paths = {
   dine: { kicker: 'Dùng bữa tại Mỹ Yến', heading: 'Một bữa ăn để ngồi lại lâu hơn.', copy: 'Chọn chòi sân vườn cho cuộc gặp thân mật, hoặc khám phá những món ăn phù hợp để cả bàn cùng thưởng thức.', primary: 'Chuẩn bị yêu cầu đặt bàn', primaryHref: 'spaces.html#table-helper', secondary: 'Xem thực đơn', secondaryHref: 'menu.html' },
   event: { kicker: 'Tiệc & sự kiện', heading: 'Một kế hoạch rõ ràng cho ngày quan trọng.', copy: 'Từ sinh nhật, mừng thọ đến liên hoan công ty và lễ cưới, Mỹ Yến hỗ trợ bạn bắt đầu từ số khách, không gian và thực đơn.', primary: 'Chuẩn bị yêu cầu tiệc', primaryHref: 'events.html#group-helper', secondary: 'Xem cách chuẩn bị tiệc', secondaryHref: 'events.html' },
