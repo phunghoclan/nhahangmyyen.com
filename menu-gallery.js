@@ -188,8 +188,29 @@ const digitalMenuItems = [
   ['Sườn non tay cầm', 240000, 'claypot', '', 'món', '', portionSizes(240000, 480000)],
   ['Gà ba ly tay cầm', 240000, 'claypot', '', 'món', '', portionSizes(240000, 480000)],
   ['Cà tím cá mặn tay cầm', 188000, 'claypot', '', 'món', '', portionSizes(188000, 390000)],
-  ['Đậu hũ sốt bò bằm tay cầm', 188000, 'claypot', '', 'món', '', portionSizes(188000, 390000)]
+  ['Đậu hũ sốt bò bằm tay cầm', 188000, 'claypot', '', 'món', '', portionSizes(188000, 390000)],
+  ['Tôm hùm', 0, 'market-seafood', 'Thời giá · xác nhận trong ngày', 'loại'],
+  ['Tôm càng', 0, 'market-seafood', 'Thời giá · xác nhận trong ngày', 'loại'],
+  ['Tôm tích & tôm mũ ni', 0, 'market-seafood', 'Thời giá · xác nhận trong ngày', 'loại'],
+  ['Cua & cua lột', 0, 'market-seafood', 'Thời giá · xác nhận trong ngày', 'loại'],
+  ['Cua Alaska', 0, 'market-seafood', 'Thời giá · xác nhận trong ngày', 'loại'],
+  ['Cá tươi theo mùa', 0, 'market-seafood', 'Thời giá · xác nhận trong ngày', 'loại'],
+  ['Cá chình & ba ba', 0, 'market-seafood', 'Thời giá · xác nhận trong ngày', 'loại'],
+  ['Ốc vòi voi & ốc hương', 0, 'market-seafood', 'Thời giá · xác nhận trong ngày', 'loại'],
+  ['Mực tươi', 0, 'market-seafood', 'Thời giá · xác nhận trong ngày', 'loại']
 ].map(([name, price, category, priceLabel, unit, note, sizes], index) => ({ id: `dish-${index + 1}`, name, price, category, priceLabel, unit: unit || 'phần', note, sizes: sizes?.map(([id, label, sizePrice]) => ({ id, label, price: sizePrice })) }));
+
+const marketSeafoodDetails = [
+  ['Tôm hùm', 'fc9f6b8328704252a5d7b0a32411bd65', ['Sashimi', 'Hấp tỏi', 'Sốt phô mai', 'Sốt Singapore']],
+  ['Tôm càng', '6e8697f38237dbb812dd091cc5ec47cc', ['Nướng', 'Hấp tỏi', 'Nướng phô mai', 'Sốt X.O']],
+  ['Tôm tích & tôm mũ ni', '889a162ef6003668834bc34c769f431b', ['Hấp tỏi', 'Sốt kim sa', 'Rang muối', 'Xào cay Tứ Xuyên']],
+  ['Cua & cua lột', '1212b767200406a1cdffbb83a5384279', ['Sốt tiêu đen', 'Xào Singapore', 'Miến tay cầm', 'Rang muối']],
+  ['Cua Alaska', '8a619827b0b41709939d10168e1e8f7a', ['Sốt X.O', 'Xào Singapore', 'Miến tay cầm', 'Hấp bửu hoa tiêu']],
+  ['Cá tươi theo mùa', '656816498a073a99af1077c179947847', ['Hấp Hồng Kông', 'Hấp tàu xì', 'Xối mỡ', 'Hồng xíu']],
+  ['Cá chình & ba ba', '4194cfdfa9e74a8069c8a446b1aae8bf', ['Hấp X.O', 'Hấp táo đỏ lá sen', 'Hồng xíu', 'Tiềm thuốc Bắc']],
+  ['Ốc vòi voi & ốc hương', '4fbe098432475f7f1b78e3be010e2e4d', ['Ăn sống', 'Hấp tỏi', 'Xào X.O', 'Rang muối']],
+  ['Mực tươi', 'c9e8cb3ea867850bde685271c33fd5d8', ['Xào X.O', 'Rang muối', 'Sốt kim sa', 'Xào sa tế']]
+].map(([name, image, preparations]) => ({ item: digitalMenuItems.find(entry => entry.name === name), image, preparations }));
 
 const shortlistKey = 'myyen-menu-shortlist-v1';
 const quantityKey = 'myyen-menu-quantities-v1';
@@ -210,6 +231,7 @@ if (dishGrid) {
   const moreButton = document.querySelector('#dish-more');
   const dock = document.querySelector('#dish-selection-dock');
   const dockCount = document.querySelector('#dish-dock-count');
+  const marketGrid = document.querySelector('#market-seafood-grid');
   const pageSize = 6;
   let visibleLimit = pageSize;
   let activeFilter = 'dimsum';
@@ -247,6 +269,30 @@ if (dishGrid) {
     }).filter(Boolean);
     localStorage.setItem('myyen-menu-shortlist-names-v1', JSON.stringify(names));
   };
+  const toggleSelection = id => {
+    if (selected.includes(id)) {
+      selected = selected.filter(value => value !== id);
+      delete quantities[id];
+      delete selectedSizes[id];
+    } else {
+      selected = [...selected, id];
+      quantities[id] = 1;
+      const item = digitalMenuItems.find(candidate => candidate.id === id);
+      if (item?.sizes && !selectedSizes[id]) selectedSizes[id] = item.sizes[0].id;
+    }
+    saveShortlist();
+    renderDishes();
+    renderMarketSeafood();
+    renderShortlist();
+  };
+  const renderMarketSeafood = () => {
+    if (!marketGrid) return;
+    marketGrid.innerHTML = marketSeafoodDetails.map(({ item, image, preparations }) => {
+      const isSelected = selected.includes(item.id);
+      return `<article class="market-seafood-card"><img loading="lazy" src="assets/menu/regular/${image}.JPEG" alt="Trang thực đơn ${item.name} của Nhà Hàng Mỹ Yến"><div><p class="market-price">Thời giá</p><h3>${item.name}</h3><p class="market-preparations">${preparations.join(' · ')}</p><button type="button" data-market-add="${item.id}" aria-pressed="${isSelected}">${isSelected ? 'Đã thêm vào yêu cầu' : 'Tôi quan tâm'}</button></div></article>`;
+    }).join('');
+    marketGrid.querySelectorAll('[data-market-add]').forEach(button => button.addEventListener('click', () => toggleSelection(button.dataset.marketAdd)));
+  };
   const renderShortlist = () => {
     const selectedItems = selected.map(id => digitalMenuItems.find(item => item.id === id)).filter(Boolean);
     count.textContent = selectedItems.length;
@@ -261,6 +307,7 @@ if (dishGrid) {
       delete selectedSizes[button.dataset.removeDish];
       saveShortlist();
       renderDishes();
+      renderMarketSeafood();
       renderShortlist();
     }));
     shortlistItems.querySelectorAll('[data-decrease-dish]').forEach(button => button.addEventListener('click', () => {
@@ -295,20 +342,7 @@ if (dishGrid) {
       renderShortlist();
     }));
     dishGrid.querySelectorAll('[data-add-dish]').forEach(button => button.addEventListener('click', () => {
-      const id = button.dataset.addDish;
-      if (selected.includes(id)) {
-        selected = selected.filter(value => value !== id);
-        delete quantities[id];
-        delete selectedSizes[id];
-      } else {
-        selected = [...selected, id];
-        quantities[id] = 1;
-        const item = digitalMenuItems.find(candidate => candidate.id === id);
-        if (item?.sizes && !selectedSizes[id]) selectedSizes[id] = item.sizes[0].id;
-      }
-      saveShortlist();
-      renderDishes();
-      renderShortlist();
+      toggleSelection(button.dataset.addDish);
     }));
   };
   filterButtons.forEach(button => button.addEventListener('click', () => {
@@ -332,10 +366,12 @@ if (dishGrid) {
     selectedSizes = {};
     saveShortlist();
     renderDishes();
+    renderMarketSeafood();
     renderShortlist();
   });
   saveShortlist();
   renderDishes();
+  renderMarketSeafood();
   renderShortlist();
 }
 
