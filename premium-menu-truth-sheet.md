@@ -18,14 +18,15 @@ Menu instruction: order at least 4 hours in advance.
 
 Safe educational angle: slow preparation, a shared soup for family gatherings, and the difference between the ingredient combinations.
 
-Working assumptions and remaining confirmation:
+Restaurant guidance:
 
 - How many guests each pot serves.
 - Listed prices are minimum charges; the final amount will not be lower than the menu price.
 - Which ingredients are included in each named version.
-- The menu's `/người` pricing is treated as one portion per person for the premium soup dishes.
-- Whether the 4-hour lead time applies to every soup or only selected dishes.
-- Recommended dishes by guest count are not yet defined and should not be promised.
+- One portion is the default order unit for canh tiềm, but the number of guests served by each pot is not yet confirmed.
+- All listed canh tiềm dishes are currently available.
+- Orders should be placed at least 4 hours in advance.
+- Recommendations should be customized by occasion, guest count, budget, and dietary needs rather than tied to a fixed guest-count chart.
 
 ## Pilot 2: Bào ngư
 
@@ -41,13 +42,13 @@ Confirmed from the menu:
 
 Safe educational angle: preparation style, ingredient combination, serving format, and why live or market-priced ingredients need confirmation on the day.
 
-Working assumptions and remaining confirmation:
+Restaurant guidance and remaining confirmation:
 
 - Origin is not needed for the first campaign.
-- Whether “nguyên con” has a standard size or weight range.
-- Ideal guest count for each dish.
-- Preparation lead time is not yet confirmed and should not be stated.
-- Exact ingredients and portion structure of Phật nhảy tường.
+- Bào ngư “nguyên con” is ordered as one piece per person.
+- Bào ngư is currently available and priced according to the market price on the day.
+- Phật nhảy tường is currently understood as 680.000đ per bowl; this differs from the printed menu's “680.000đ/người” and must be confirmed before publishing the serving unit.
+- Recommendations should be customized by occasion, guest count, budget, and dietary needs.
 
 ## Pilot 3: Yến sào & vi cá
 
@@ -68,12 +69,14 @@ Confirmed from the menu:
 
 Safe educational angle: serving unit, preparation style, flavor differences, and how guests can choose between a single serving and a shared meal.
 
-Working assumptions and remaining confirmation:
+Restaurant guidance:
 
 - Origin and grade are not needed for the first campaign.
-- Premium soups are treated as one portion per person based on the menu unit.
-- The listed price is the minimum charge for the selected dish or portion.
-- Preparation time and availability are not yet confirmed.
+- Vi cá is priced per person and the listed price is the minimum charge.
+- Yến is priced per serving bowl and the listed price is the minimum charge.
+- All listed yến and vi cá dishes are currently available.
+- Recommendations should be customized by occasion, guest count, budget, and dietary needs.
+- The chef-designed dishes can take allergies and dietary needs into consideration; this should be described as customization, not as a medical or nutritional promise.
 - Use tradition, flavor, craft, and hospitality language; avoid medical claims.
 
 ## First content sequence
@@ -92,6 +95,8 @@ Working assumptions and remaining confirmation:
 - Món khách đang quan tâm.
 - Ngân sách dự kiến cho mỗi người hoặc cả bàn.
 - Có cần đặt trước không.
+- Dị ứng hoặc điều cần lưu ý về khẩu vị.
+- Kênh liên hệ ưu tiên; website inquiries ultimately continue through Zalo.
 
 ## Claims rule
 
