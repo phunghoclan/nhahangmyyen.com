@@ -34,6 +34,7 @@ const menuImages = {
 };
 
 const portionSizes = (small, large) => [['small', 'Phần nhỏ', small], ['large', 'Phần lớn', large]];
+const portionChoices = (...choices) => choices;
 
 const digitalMenuItems = [
   ['Bánh xếp Triều Châu', 53000, 'dimsum'],
@@ -90,12 +91,12 @@ const digitalMenuItems = [
   ['Pepsi / 7Up / Soda', 18000, 'drinks'],
   ['Nước suối', 12000, 'drinks'],
   ['Ngỗng quay Hồng Kông', 1600000, 'roast', '1.600.000đ / con', 'con', 'Đặt trước'],
-  ['Vịt quay da giòn', 320000, 'roast', '320.000đ / ½ con · 660.000đ / con', 'món'],
-  ['Vịt quay tiêu đen', 320000, 'roast', '320.000đ / ½ con · 660.000đ / con', 'món'],
-  ['Xá xíu mật ong', 180000, 'roast', '180.000đ – 380.000đ', 'món'],
+  ['Vịt quay da giòn', 320000, 'roast', '', 'món', '', portionChoices(['half', '½ con', 320000], ['whole', 'Nguyên con', 660000])],
+  ['Vịt quay tiêu đen', 320000, 'roast', '', 'món', '', portionChoices(['half', '½ con', 320000], ['whole', 'Nguyên con', 660000])],
+  ['Xá xíu mật ong', 180000, 'roast', 'Từ 180.000đ · tùy khẩu phần', 'món'],
   ['Vịt nướng Pì Pà', 600000, 'roast', '600.000đ / con', 'con', 'Đặt trước'],
-  ['Vịt quay Bắc Kinh 2 món', 350000, 'roast', '350.000đ / ½ con · 680.000đ / con', 'món'],
-  ['Heo sữa quay nguyên con', 400000, 'roast', '400.000đ nhỏ · 800.000đ / ½ con · 1.600.000đ / con', 'món'],
+  ['Vịt quay Bắc Kinh 2 món', 350000, 'roast', '', 'món', '', portionChoices(['half', '½ con', 350000], ['whole', 'Nguyên con', 680000])],
+  ['Heo sữa quay nguyên con', 400000, 'roast', '', 'món', '', portionChoices(['small', 'Con nhỏ', 400000], ['half', '½ con', 800000], ['whole', 'Nguyên con', 1600000])],
   ['Heo quay 3 món', 880000, 'roast', '880.000đ', 'món'],
   ['Bồ câu quay', 180000, 'roast', '180.000đ / con', 'con'],
   ['Tôm miến tay cầm', 300000, 'seafood', 'Từ 300.000đ · tùy khẩu phần', 'món'],
