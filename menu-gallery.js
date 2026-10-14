@@ -167,13 +167,34 @@ const digitalMenuItems = [
   ['Đậu hũ rang muối', 170000, 'vegetables', '', 'món', '', portionSizes(170000, 340000)],
   ['Đậu hũ kim sa', 170000, 'vegetables', '', 'món', '', portionSizes(170000, 340000)],
   ['Đậu hũ hồng xíu', 170000, 'vegetables', '', 'món', '', portionSizes(170000, 340000)],
-  ['Đậu hũ vỉ sắt', 170000, 'vegetables', '', 'món', '', portionSizes(170000, 340000)]
+  ['Đậu hũ vỉ sắt', 170000, 'vegetables', '', 'món', '', portionSizes(170000, 340000)],
+  ['Súp bóng cá tam tơ', 60000, 'soups', '60.000đ / chén', 'chén'],
+  ['Súp chua cay Tứ Xuyên', 60000, 'soups', '60.000đ / chén', 'chén'],
+  ['Súp hải sản rong biển', 60000, 'soups', '60.000đ / chén', 'chén'],
+  ['Súp hải sản đậu hũ', 60000, 'soups', '60.000đ / chén', 'chén'],
+  ['Súp sò điệp thịt cua', 60000, 'soups', '60.000đ / chén', 'chén'],
+  ['Súp bóng cá thịt cua', 60000, 'soups', '60.000đ / chén', 'chén'],
+  ['Súp măng tây thịt cua', 60000, 'soups', '60.000đ / chén', 'chén'],
+  ['Súp bắp thịt cua', 60000, 'soups', '60.000đ / chén', 'chén'],
+  ['Súp bóng cá gà xé', 60000, 'soups', '60.000đ / chén', 'chén'],
+  ['Canh hầm hàng ngày', 150000, 'soups', '', 'món', '', portionSizes(150000, 350000)],
+  ['Canh cải bẹ xanh trứng muối', 150000, 'soups', '', 'món', '', portionSizes(150000, 350000)],
+  ['Canh hải sản kiểu Thái', 180000, 'soups', '', 'món', '', portionSizes(180000, 380000)],
+  ['Canh xà lách son thịt bằm', 150000, 'soups', '', 'món', '', portionSizes(150000, 350000)],
+  ['Canh hải sản rong biển', 180000, 'soups', '', 'món', '', portionSizes(180000, 380000)],
+  ['Canh bó xôi thịt bằm', 150000, 'soups', '', 'món', '', portionSizes(150000, 350000)],
+  ['Nhất phẩm hải vị tay cầm', 1200000, 'claypot', '', 'món', '', portionSizes(1200000, 2400000)],
+  ['Bò nạm tay cầm', 240000, 'claypot', '', 'món', '', portionSizes(240000, 480000)],
+  ['Sườn non tay cầm', 240000, 'claypot', '', 'món', '', portionSizes(240000, 480000)],
+  ['Gà ba ly tay cầm', 240000, 'claypot', '', 'món', '', portionSizes(240000, 480000)],
+  ['Cà tím cá mặn tay cầm', 188000, 'claypot', '', 'món', '', portionSizes(188000, 390000)],
+  ['Đậu hũ sốt bò bằm tay cầm', 188000, 'claypot', '', 'món', '', portionSizes(188000, 390000)]
 ].map(([name, price, category, priceLabel, unit, note, sizes], index) => ({ id: `dish-${index + 1}`, name, price, category, priceLabel, unit: unit || 'phần', note, sizes: sizes?.map(([id, label, sizePrice]) => ({ id, label, price: sizePrice })) }));
 
 const shortlistKey = 'myyen-menu-shortlist-v1';
 const quantityKey = 'myyen-menu-quantities-v1';
 const sizeKey = 'myyen-menu-sizes-v1';
-const categoryNames = { dimsum: 'Dim Sum', roast: 'Món quay & gia cầm', seafood: 'Tôm & hải sản', meat: 'Bò & heo', steam: 'Món hấp', vegetables: 'Rau & đậu hũ', 'shared-noodles': 'Cơm, mì xào & lẩu', noodles: 'Mì & hủ tiếu', drinks: 'Thức uống' };
+const categoryNames = { dimsum: 'Dim Sum', roast: 'Món quay & gia cầm', seafood: 'Tôm & hải sản', meat: 'Bò & heo', steam: 'Món hấp', soups: 'Canh & súp', claypot: 'Món tay cầm', vegetables: 'Rau & đậu hũ', 'shared-noodles': 'Cơm, mì xào & lẩu', noodles: 'Mì & hủ tiếu', drinks: 'Thức uống' };
 const formatPrice = value => new Intl.NumberFormat('vi-VN').format(value) + 'đ';
 const normalizeText = value => value.normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/đ/g, 'd').toLowerCase();
 
