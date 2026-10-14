@@ -33,6 +33,8 @@ const menuImages = {
   ]
 };
 
+const portionSizes = (small, large) => [['small', 'Phần nhỏ', small], ['large', 'Phần lớn', large]];
+
 const digitalMenuItems = [
   ['Bánh xếp Triều Châu', 53000, 'dimsum'],
   ['Bó xôi cảo sò điệp', 58000, 'dimsum'],
@@ -96,20 +98,39 @@ const digitalMenuItems = [
   ['Heo sữa quay nguyên con', 400000, 'roast', '400.000đ nhỏ · 800.000đ / ½ con · 1.600.000đ / con', 'món'],
   ['Heo quay 3 món', 880000, 'roast', '880.000đ', 'món'],
   ['Bồ câu quay', 180000, 'roast', '180.000đ / con', 'con'],
-  ['Tôm miến tay cầm', 300000, 'seafood', '', 'món', '', [['small', 'Phần nhỏ', 300000], ['large', 'Phần lớn', 620000]]],
-  ['Tôm kim sa Mỹ Yến', 260000, 'seafood', '', 'món', '', [['small', 'Phần nhỏ', 260000], ['large', 'Phần lớn', 520000]]],
-  ['Tôm xào sốt X.O', 260000, 'seafood', '', 'món', '', [['small', 'Phần nhỏ', 260000], ['large', 'Phần lớn', 520000]]],
-  ['Tôm sốt mayonnaise trái thơm', 260000, 'seafood', '', 'món', '', [['small', 'Phần nhỏ', 260000], ['large', 'Phần lớn', 520000]]],
-  ['Tôm rang muối', 260000, 'seafood', '', 'món', '', [['small', 'Phần nhỏ', 260000], ['large', 'Phần lớn', 520000]]],
-  ['Tôm rang xì dầu', 260000, 'seafood', '', 'món', '', [['small', 'Phần nhỏ', 260000], ['large', 'Phần lớn', 520000]]],
-  ['Tôm xào cung bửu', 260000, 'seafood', '', 'món', '', [['small', 'Phần nhỏ', 260000], ['large', 'Phần lớn', 520000]]],
-  ['Tôm thủy tinh', 260000, 'seafood', '', 'món', '', [['small', 'Phần nhỏ', 260000], ['large', 'Phần lớn', 520000]]]
+  ['Tôm miến tay cầm', 300000, 'seafood', '', 'món', '', portionSizes(300000, 620000)],
+  ['Tôm kim sa Mỹ Yến', 260000, 'seafood', '', 'món', '', portionSizes(260000, 520000)],
+  ['Tôm xào sốt X.O', 260000, 'seafood', '', 'món', '', portionSizes(260000, 520000)],
+  ['Tôm sốt mayonnaise trái thơm', 260000, 'seafood', '', 'món', '', portionSizes(260000, 520000)],
+  ['Tôm rang muối', 260000, 'seafood', '', 'món', '', portionSizes(260000, 520000)],
+  ['Tôm rang xì dầu', 260000, 'seafood', '', 'món', '', portionSizes(260000, 520000)],
+  ['Tôm xào cung bửu', 260000, 'seafood', '', 'món', '', portionSizes(260000, 520000)],
+  ['Tôm thủy tinh', 260000, 'seafood', '', 'món', '', portionSizes(260000, 520000)],
+  ['Cơm gà xé cá mặn', 180000, 'shared-noodles', '', 'món', '', portionSizes(180000, 380000)],
+  ['Cơm chiên sò điệp sốt cải', 220000, 'shared-noodles', '', 'món', '', portionSizes(220000, 460000)],
+  ['Cơm chiên Dương Châu', 150000, 'shared-noodles', '', 'món', '', portionSizes(150000, 300000)],
+  ['Cơm chiên Phúc Kiến sốt bào ngư', 220000, 'shared-noodles', '', 'món', '', portionSizes(220000, 460000)],
+  ['Cơm chiên hải sản Thái Lan', 180000, 'shared-noodles', '', 'món', '', portionSizes(180000, 380000)],
+  ['Mì xào hải sản', 180000, 'shared-noodles', '', 'món', '', portionSizes(180000, 380000)],
+  ['Mì xào xì dầu', 150000, 'shared-noodles', '', 'món', '', portionSizes(150000, 300000)],
+  ['Mì xào thập cẩm', 150000, 'shared-noodles', '', 'món', '', portionSizes(150000, 300000)],
+  ['Mì Udon xào hải sản X.O', 180000, 'shared-noodles', '', 'món', '', portionSizes(180000, 380000)],
+  ['Mì Udon xào gà tiêu đen', 150000, 'shared-noodles', '', 'món', '', portionSizes(150000, 300000)],
+  ['Hủ tiếu xào tôm trứng', 240000, 'shared-noodles', '', 'món', '', portionSizes(240000, 480000)],
+  ['Hủ tiếu xào bò áp chảo', 150000, 'shared-noodles', '', 'món', '', portionSizes(150000, 300000)],
+  ['Hủ tiếu xào sườn tàu xì', 150000, 'shared-noodles', '', 'món', '', portionSizes(150000, 300000)],
+  ['Hủ tiếu xào hải sản', 180000, 'shared-noodles', '', 'món', '', portionSizes(180000, 380000)],
+  ['Bún gạo xào Singapore', 150000, 'shared-noodles', '', 'món', '', portionSizes(150000, 300000)],
+  ['Bún gạo xào sườn tàu xì', 150000, 'shared-noodles', '', 'món', '', portionSizes(150000, 300000)],
+  ['Lẩu hải sản Quảng Đông', 450000, 'shared-noodles', '', 'món', '', portionSizes(450000, 600000)],
+  ['Lẩu nấm hải sản', 450000, 'shared-noodles', '', 'món', '', portionSizes(450000, 600000)],
+  ['Lẩu Thái hải sản', 450000, 'shared-noodles', '', 'món', '', portionSizes(450000, 600000)]
 ].map(([name, price, category, priceLabel, unit, note, sizes], index) => ({ id: `dish-${index + 1}`, name, price, category, priceLabel, unit: unit || 'phần', note, sizes: sizes?.map(([id, label, sizePrice]) => ({ id, label, price: sizePrice })) }));
 
 const shortlistKey = 'myyen-menu-shortlist-v1';
 const quantityKey = 'myyen-menu-quantities-v1';
 const sizeKey = 'myyen-menu-sizes-v1';
-const categoryNames = { dimsum: 'Dim Sum', roast: 'Món quay & gia cầm', seafood: 'Tôm & hải sản', noodles: 'Mì & hủ tiếu', drinks: 'Thức uống' };
+const categoryNames = { dimsum: 'Dim Sum', roast: 'Món quay & gia cầm', seafood: 'Tôm & hải sản', 'shared-noodles': 'Cơm, mì xào & lẩu', noodles: 'Mì & hủ tiếu', drinks: 'Thức uống' };
 const formatPrice = value => new Intl.NumberFormat('vi-VN').format(value) + 'đ';
 const normalizeText = value => value.normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/đ/g, 'd').toLowerCase();
 
@@ -201,7 +222,7 @@ if (dishGrid) {
       const isSelected = selected.includes(item.id);
       const size = chosenSize(item);
       const sizeChoices = item.sizes ? `<div class="dish-size-options" role="group" aria-label="Chọn khẩu phần ${item.name}">${item.sizes.map(option => `<button type="button" data-size-dish="${item.id}" data-size="${option.id}" aria-pressed="${option.id === size.id}"><span>${option.label}</span><strong>${formatPrice(option.price)}</strong></button>`).join('')}</div>` : '';
-      return `<article class="dish-item"><p class="eyebrow">${categoryNames[item.category]}</p><h3>${item.name}</h3>${sizeChoices || `<p class="dish-item-price">${item.priceLabel || formatPrice(item.price)} <small>tham khảo</small></p>`}${item.note ? `<p class="dish-item-note">${item.note}</p>` : ''}<button type="button" data-add-dish="${item.id}" aria-pressed="${isSelected}">${isSelected ? 'Đã thêm' : 'Thêm vào yêu cầu'}</button></article>`;
+      return `<article class="dish-item"><p class="eyebrow">${categoryNames[item.category]}</p><h3>${item.name}</h3>${sizeChoices || `<p class="dish-item-price">${item.priceLabel || formatPrice(item.price)}</p>`}${item.note ? `<p class="dish-item-note">${item.note}</p>` : ''}<button type="button" data-add-dish="${item.id}" aria-pressed="${isSelected}">${isSelected ? 'Đã thêm' : 'Thêm vào yêu cầu'}</button></article>`;
     }).join('');
     dishGrid.querySelectorAll('[data-size-dish]').forEach(button => button.addEventListener('click', () => {
       selectedSizes[button.dataset.sizeDish] = button.dataset.size;
