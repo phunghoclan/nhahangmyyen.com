@@ -107,7 +107,10 @@ footer a {
   .proof-strip p { border-right: 0; border-bottom: 1px solid rgba(255,255,255,.14); padding: .7rem 0; }
   .proof-strip p:last-child { border-bottom: 0; }
   .journey-grid { grid-template-columns: 1fr; }
+  .premium-teaser { grid-template-columns:1fr; }
+  .premium-teaser > img { min-height:220px; max-height:300px; }
   .premium-grid { grid-template-columns:1fr; }
+  .premium-guide-grid { grid-template-columns:1fr; }
   .premium-card img { height:220px; }
   .premium-cta { display:block; }
   .premium-cta .button { margin-top:1rem; }
@@ -197,6 +200,21 @@ footer a {
 .menu-intro h2 { font-size:clamp(2.2rem,4vw,4rem); }
 .menu-intro p { margin:0; max-width:560px; color:#5d625b; }
 .premium-menu { background:#fffdf8; }
+.premium-teaser { display:grid; grid-template-columns:1.1fr .9fr; gap:2rem; align-items:stretch; padding-top:clamp(3rem,6vw,6rem); padding-bottom:clamp(3rem,6vw,6rem); }
+.premium-teaser-copy { align-self:center; max-width:700px; }
+.premium-teaser-copy h2 { color:var(--jade); }
+.premium-teaser-copy p:not(.eyebrow) { color:#5d625b; max-width:620px; }
+.premium-teaser > img { width:100%; height:100%; min-height:280px; object-fit:cover; }
+.premium-page-hero h1 { max-width:720px; }
+.premium-page-hero p:not(.eyebrow) { max-width:620px; }
+.premium-education { background:#fffdf8; }
+.premium-guide { background:#efe6d5; }
+.premium-guide-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:1rem; max-width:1240px; margin:0 auto; }
+.premium-guide-grid article { padding:1.6rem; background:#fffdf8; border-top:3px solid var(--aged-gold); }
+.premium-guide-grid span { color:var(--aged-gold); font-weight:700; letter-spacing:.12em; }
+.premium-guide-grid h3 { color:var(--jade); font-size:1.45rem; margin:.7rem 0; }
+.premium-guide-grid p { color:#5d625b; font-size:.92rem; }
+.premium-contact { background:#fffdf8; padding-top:clamp(2rem,5vw,4rem); }
 .premium-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:1rem; max-width:1240px; margin:0 auto; }
 .premium-card { background:#efe6d5; border:1px solid rgba(25,59,50,.14); }
 .premium-card img { display:block; width:100%; height:260px; object-fit:cover; }

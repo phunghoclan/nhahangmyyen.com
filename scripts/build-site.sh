@@ -6,7 +6,7 @@ node scripts/render-banquet.mjs
 rm -rf dist
 mkdir -p dist/assets
 
-cp banquet-menu.html index.html menu.html spaces.html events.html corporate-catering.html takeaway.html visit.html dist/
+cp banquet-menu.html premium-menu.html index.html menu.html spaces.html events.html corporate-catering.html takeaway.html visit.html dist/
 cp banquet.js menu-gallery.js app.js enhancements.css styles.css llms.txt robots.txt sitemap.xml dist/
 cp _headers dist/
 cp -R assets/. dist/assets/
